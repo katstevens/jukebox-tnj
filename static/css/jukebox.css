@@ -1,0 +1,171 @@
+	/* CSS Document
+------------------------------ */
+
+#container{
+background:#EDF;
+width:90%;
+border:solid #000;
+border-width:2px;
+margin: 10px;
+text-align:left;
+color:#141414;
+position:relative;
+padding: 1em;
+  }
+body{
+font-family: "Verdana", "Bitstream Vera Sans", lucida, arial, helvetica, sans-serif;
+padding: 0;
+background: #4De6B4;
+color: #111;
+line-height: 1.166;
+background:  #FEC;
+margin: 0;
+}
+
+img{
+border: none;
+}
+/* classes to float images left or right  */
+.right{
+float: right;
+}
+.left{
+float: left;
+}
+
+a{
+	color: #0B4C83;
+	text-decoration: none;
+}
+a:link{
+	color: #0B4C83;
+	text-decoration: none;
+}
+a:visited{
+	color: #0B4C83;
+	text-decoration: none;
+}
+a:hover{
+	color: #790000;
+	text-decoration: underline;
+}
+h1{
+ font-size: 160%;
+ margin: 0px;
+ padding: 0px;
+font: Eurostile;
+}
+h2{
+ font-size: 114%;
+ margin: 0px;
+ padding: 0px;
+}
+h3{
+ font-size: 100%;
+ margin: 0px;
+ padding: 0px;
+}
+h4{
+ font-size: 100%;
+ margin: 0px;
+ padding: 0px;
+}
+
+h5{
+ font-size: 100%;
+ margin: 0px;
+ padding: 0px;
+}
+
+p{
+font-size: small;
+}
+
+#header{
+background: #115533 no-repeat center right;
+color: #fff;
+margin: 0 0 0 0;
+height: 42px;
+border-bottom: 2px solid #3C6DC6;
+padding: 3px;
+}
+
+#header a{
+color: #fff;
+}
+#header a:hover{
+color: #fff;
+text-decoration: underline;
+}
+#header a:visited{
+color: #fff;
+}
+
+/* Tables
+----------------------------------------------- */
+
+table {
+margin: 1em 0;
+padding: 2px 4px 4px 2px;
+border: 2px dotted #555;
+
+	border-width: 1px 1px 1px 1px;
+	border-spacing: 2px;
+	border-style: outset outset outset outset;
+	border-color: black black black black;
+	border-collapse: collapse;
+
+}
+
+table td {
+	border-width: 1px 1px 1px 1px;
+	padding: 3px 3px 3px 3px;
+	border-style: solid solid solid solid;
+	border-color: gray gray gray gray;
+
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+table tr.closing {
+background-color: #FFB8B8;}
+
+table tr.publish {
+background-color: #B8FFB8;}
+
+table tr.open {
+background-color: #B8B8FF;}
+
+table tr.new {
+background-color: #CCCCCC;}
+
+table tr.dead {
+background-color: #FFFFFF;}
+
+table tr.pending {
+background-color: #EEEE00;}
+
+
+table td.closing {
+background-color: #FFB8B8;}
+
+table td.publish {
+background-color: #B8FFB8;}
+
+table td.open {
+background-color: #B8B8FF;}
+
+table td.new {
+background-color: #CCCCCC;}
+
+table td.dead {
+background-color: #FFFFFF;}
+
+table td.pending {
+background-color: #EEEE00;}
+
+#myInstance1 {
+
+nicEdit-panel {
+background-color: #fff;
+}
+ 

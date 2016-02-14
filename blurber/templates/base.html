@@ -1,0 +1,30 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>TSJ 2.0</title>
+
+
+<link rel="stylesheet" href="{% static 'css/jukebox.css' %}" type="text/css" />
+<script type="text/javascript" src="{% static 'js/jquery-1.9.1.min.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
+</head>
+<body>
+{% block main %}    
+<div id="container">
+	<h1 class="header">
+		The Singles Jukebox: {% block page_title %}{% endblock %}
+	</h1>
+
+	{% block content %}
+
+	{% endblock %}
+
+</div>
+
+{% endblock %}
+
+{{ analytics_code }}
+
+</body>
+</html>

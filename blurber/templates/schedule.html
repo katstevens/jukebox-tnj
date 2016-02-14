@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load tz %}
+{% block page_title %}Songlist{% endblock %}
+
+{% block content %}
+	<br />
+	<div class="writer_info">
+		{{ request.user.get_short_name }}: [Schedule] <a href="">[My blurbs]</a> <a href="">[Site FAQ]</a>
+	</div>
+	<div>Current time:
+		LONDON - {{ now|timezone:"Europe/London"|time:"H:i" }}.
+		NEW YORK - {{ now|timezone:"America/New_York"|time:"H:i" }}.
+		SYDNEY - {{ now|timezone:"Australia/Sydney"|time:"H:i" }}.
+	</div>
+
+	<table>
+	{% for song in all_open_songs %}
+		<tr class="{{ song.css_class }}">
+			<td><strong>{{ song.artist }}</strong> - {{ song.title }}</td>
+			<td><a href="{{ song.mp3_link }}">MP3</a></td>
+			<td><a href="{{ song.youtube_link }}">Video</a></td>
+			<td>
+				{% if song in user_songs %}
+					<a href="{% url 'write_review' song.id %}">Edit blurb</a>
+				{% else %}
+					<a href="{% url 'write_review' song.id %}">Write blurb</a>
+				{% endif %} ({{ song.blurb_count }})
+			</td>
+		</tr>
+	{% endfor %}
+	</table>
+
+{% endblock %}
