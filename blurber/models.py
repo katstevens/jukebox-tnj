@@ -45,11 +45,18 @@ class Song(models.Model):
         return self.saved_reviews().count()
 
     def css_class(self):
+        if self.status == 'published':
+            return 'dead'
         if self.blurb_count() == 0:
             return 'new'
+        elif self.blurb_count() > 10:
+            return 'closing'
         elif self.blurb_count() > 5:
             return 'publish'
         return 'open'
+
+    def closed(self):
+        return True if self.status == 'published' else False
 
     def average_score(self):
         # TODO: figure out what floats etc are needed here
@@ -94,3 +101,13 @@ class ScheduledWeek(models.Model):
 
     def __str__(self):
         return self.week_beginning.strftime("%D/%M/%Y")
+
+    def weekdays(self):
+        return [
+            {'daystring': 'MONDAY', 'songs': self.monday.all()},
+            {'daystring': 'TUESDAY', 'songs': self.tuesday.all()},
+            {'daystring': 'WEDNESDAY', 'songs': self.wednesday.all()},
+            {'daystring': 'THURSDAY', 'songs': self.thursday.all()},
+            {'daystring': 'FRIDAY', 'songs': self.friday.all()},
+            {'daystring': 'SATURDAY', 'songs': self.saturday.all()},
+        ]

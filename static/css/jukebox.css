@@ -169,3 +169,11 @@ nicEdit-panel {
 background-color: #fff;
 }
  
+/* BONUS */
+.this-week {
+    border-top:1px solid #555;
+}
+
+.this-week a {
+    font-weight:bold;
+}

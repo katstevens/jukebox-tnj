@@ -4,13 +4,34 @@
 
 {% block content %}
 	<br />
-	<div class="writer_info">
+	<div class="writer-info">
 		{{ request.user.get_short_name }}: [Schedule] <a href="">[My blurbs]</a> <a href="">[Site FAQ]</a>
 	</div>
 	<div>Current time:
 		LONDON - {{ now|timezone:"Europe/London"|time:"H:i" }}.
 		NEW YORK - {{ now|timezone:"America/New_York"|time:"H:i" }}.
 		SYDNEY - {{ now|timezone:"Australia/Sydney"|time:"H:i" }}.
+	</div>
+
+	<div class="this-week">
+		{{ this_week.week_info|safe }}
+		<br />
+		<table>
+			{% for day_info in this_week.weekdays %}
+			<tr>
+				<td>{{ day_info.daystring }}</td>
+				{% for s in day_info.songs %}
+				<td class="{{ s.css_class }}">
+					{% if s.closed %}
+						{{ s.artist }}
+					{% else %}
+						<a href="{% url 'write_review' s.id %}">{{ s.artist }} ({{ s.blurb_count }})</a>
+					{% endif %}
+				</td>
+				{% endfor %}
+			</tr>
+			{% endfor %}
+		</table>
 	</div>
 
 	<table>
