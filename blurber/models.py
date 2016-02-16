@@ -69,7 +69,7 @@ class Song(models.Model):
         return "%s - %s" % (self.artist, self.title)
 
     class Meta:
-        ordering = ['-create_date']
+        ordering = ['-upload_date']
 
 
 class Review(models.Model):
