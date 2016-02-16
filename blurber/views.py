@@ -68,4 +68,12 @@ def write_review(request, song_id, use_html=False):
         }
     )
 
-
+"""
+TODO: output HTML for wordpress/tumblr
+- wordpress link up/publish
+- admin groups (editor, site admin)
+- sorting reviews ready for a post (via song list not admin?)
+- settings per post, turn on/off user ratings
+- deleting blurbs (email alert to admins)
+- passwords etc
+"""
