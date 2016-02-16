@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block page_title %}My reviews{% endblock %}
+
+{% block content %}
+	<div>
+		<br />
+		[<a href="{% url 'weekly_schedule' %}">Songlist</a>]
+		{% if status == 'saved' %}
+			[<a href="{% url 'my_blurbs_by_status' 'published' %}">Show published only</a>]
+			[<a href="{% url 'my_blurbs' %}">Show all</a>]
+		{% elif status == 'published' %}
+			[<a href="{% url 'my_blurbs_by_status' 'open' %}">Show pending only</a>]
+			[<a href="{% url 'my_blurbs' %}">Show all</a>]
+		{% else %}
+			[<a href="{% url 'my_blurbs_by_status' 'open' %}">Show pending only</a>]
+			[<a href="{% url 'my_blurbs_by_status' 'published' %}">Show published only</a>]
+		{% endif %}
+	</div>
+	<div>
+		{% for review in reviews %}
+			<p><strong>{{ review.song }} [{{ review.score }}]</strong><br />
+			{{ review.blurb|safe }}</p>
+			<br />
+		{% endfor %}
+	</div>
+
+{% endblock %}

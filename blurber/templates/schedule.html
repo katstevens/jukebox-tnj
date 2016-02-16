@@ -5,7 +5,7 @@
 {% block content %}
 	<br />
 	<div class="writer-info">
-		{{ request.user.get_short_name }}: [Schedule] <a href="">[My blurbs]</a> <a href="">[Site FAQ]</a>
+		{{ request.user.get_short_name }}: [Schedule] <a href="{% url 'my_blurbs' %}">[My blurbs]</a> <a href="">[Site FAQ]</a>
 	</div>
 	<div>Current time:
 		LONDON - {{ now|timezone:"Europe/London"|time:"H:i" }}.
