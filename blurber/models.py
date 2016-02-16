@@ -33,6 +33,7 @@ class Song(models.Model):
     tagline = models.CharField(max_length=255, null=True, blank=True)
 
     wordpress_post_id = models.CharField(max_length=50, null=True, blank=True)
+    display_user_ratings = models.BooleanField(default=True)
     status = models.CharField(choices=SONG_STATUS_CHOICES, max_length=20)
 
     publish_date = models.DateTimeField(help_text="Schedule a publish time here", null=True, blank=True)
@@ -67,13 +68,16 @@ class Song(models.Model):
     def __str__(self):
         return "%s - %s" % (self.artist, self.title)
 
+    class Meta:
+        ordering = ['-create_date']
+
 
 class Review(models.Model):
 
     writer = models.ForeignKey(Writer)
     song = models.ForeignKey(Song)
 
-    blurb = models.TextField(max_length=4000)
+    blurb = models.TextField(max_length=5000)
     score = models.IntegerField()
 
     sort_order = models.IntegerField(default=0)
@@ -83,6 +87,9 @@ class Review(models.Model):
 
     def __str__(self):
         return "%s - %s: %s" % (self.song.artist, self.song.title, self.writer.initials())
+
+    class Meta:
+        ordering = ['-create_date']
 
 
 class ScheduledWeek(models.Model):
@@ -111,3 +118,6 @@ class ScheduledWeek(models.Model):
             {'daystring': 'FRIDAY', 'songs': self.friday.all()},
             {'daystring': 'SATURDAY', 'songs': self.saturday.all()},
         ]
+
+    class Meta:
+        ordering = ['-week_beginning']
