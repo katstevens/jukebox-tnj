@@ -1,51 +1,25 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block extra_scripts %}
-{% if not use_html %}
-	<script src="{% static 'js/nicEdit.js' %}" type="text/javascript"></script>
-	<script type="text/javascript">
-	bkLib.onDomLoaded(function() {
-		new nicEditor({buttonList : ['bold','italic','underline','strikethrough','link','unlink','html']}).panelInstance('id_blurb');
-	});
-	</script>
-{% endif %}
-{% endblock %}
-{% block page_title %}Submit review{% endblock %}
+{% block page_title %}Upload a song{% endblock %}
 
 {% block content %}
+
 	<div>
-		<br />
-		{{ song.title }} by {{ song.artist }} [<a href="{% url 'weekly_schedule' %}">Go back</a>]
+	{% if song %}
+		<p><em>{{ song }}</em> successfully uploaded.</p>
+	{% endif %}
 	</div>
 	<div>
 		<form action="" method="post">
     		{% csrf_token %}
-			<select name="score" id="id_score">
-				<option value="99">-</option>
-				{% for i in score_limit %}
-				<option value="{{ i }}"{% if form.score.value == i %} selected="selected"{% endif %}>{{ i }}</option>
-				{% endfor %}
-			</select>
-			<br /><br />
-			
-			<textarea name="blurb" id="id_blurb" rows="15" cols="100">{{ form.blurb.value }}</textarea>
-
+			{{ form.as_p }}
 			<br />
+			<input type="submit" name="submit" value="Submit and upload another song" />
 			<input type="submit" name="submit_and_return_to_songlist" value="Submit and return to song list" />
-			<input type="submit" name="submit" value="Submit and stay on edit page" />
 			<br />
 		</form>
-		{% if use_html %}
-		<p><a href="{% url 'write_review' song.id %}">Edit with rich text editor.</a></p>
-		{% else %}
-		<p><a href="{% url 'write_review_html' song.id %}">Edit in plain-text editor to manually correct HTML.</a></p>
-		{% endif %}
 	</div>
 	<br />
-	<div>
-	{% if preview_text %}
-		<strong>{{ request.user }}</strong>: {{ form.blurb.value|safe }}<br /><strong>[{{ form.score.value }}]</strong>
-	{% endif %}
-	</div>
+
 {% endblock %}

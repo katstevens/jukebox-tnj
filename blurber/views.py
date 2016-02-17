@@ -1,8 +1,9 @@
 from datetime import datetime
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from blurber.models import Song, ScheduledWeek, Review
-from blurber.forms import ReviewForm
+from blurber.forms import ReviewForm, UploadSongForm
 
 
 def weekly_schedule(request):
@@ -68,6 +69,29 @@ def write_review(request, song_id, use_html=False):
         }
     )
 
+
+@staff_member_required
+def upload_song(request):
+
+    song = False
+    if request.method == 'POST':
+        form = UploadSongForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            song = form.save(commit=False)
+            song.status = 'open'    # Can change in admin later
+            song.save()
+
+            if 'submit_and_return_to_songlist' in request.POST:
+                return redirect('weekly_schedule')
+
+            # Else reset fresh form for next upload
+
+    form = UploadSongForm()
+
+    return render(
+        request, 'upload_song.html', {'form': form, 'song': song}
+    )
+
 """
 TODO: output HTML for wordpress/tumblr
 - wordpress link up/publish
@@ -76,4 +100,12 @@ TODO: output HTML for wordpress/tumblr
 - settings per post, turn on/off user ratings
 - deleting blurbs (email alert to admins)
 - passwords etc
+Edit someone else's blurbs
+Look at all blurbs submitted for a song
+Look at all blurbs submitted by someone
+Change the score (actually nobody has this ability at present, if I need to do it I just open the data and change manually)
+Upload a song
+Edit song info
+Schedule a day/remove the songs for a day
+Post an entry
 """

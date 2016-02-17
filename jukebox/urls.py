@@ -18,13 +18,15 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 
-from blurber.views import weekly_schedule, write_review
+from blurber.views import weekly_schedule, write_review, upload_song
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^schedule/', weekly_schedule, name='weekly_schedule'),
     url(r'^song/(?P<song_id>\d+)$', write_review, name='write_review'),
     url(r'^song/(?P<song_id>\d+)/html/$', write_review, {'use_html': True}, name='write_review_html'),
+    url(r'^song/upload', upload_song, name='upload_song'),
+
     url(r'^myblurbs/', include('writers.urls'))
 ]
 
