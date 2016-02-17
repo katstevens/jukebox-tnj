@@ -25,6 +25,9 @@ class Song(models.Model):
     artist = models.CharField(max_length=256)
     title = models.CharField(max_length=400)
 
+    # file will be uploaded to MEDIA_ROOT/somewhere
+    mp3_file = models.FileField(upload_to='somewhere', null=True, blank=True)
+
     mp3_link = models.URLField(null=True, blank=True)
     youtube_link = models.URLField(null=True, blank=True)
     web_link = models.URLField(null=True, blank=True)
