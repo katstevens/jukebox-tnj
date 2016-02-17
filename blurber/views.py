@@ -1,11 +1,13 @@
 from datetime import datetime
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from blurber.models import Song, ScheduledWeek, Review
 from blurber.forms import ReviewForm, UploadSongForm
 
 
+@login_required
 def weekly_schedule(request):
 
     all_open_songs = Song.objects.filter(status='open')
@@ -29,6 +31,7 @@ def weekly_schedule(request):
     )
 
 
+@login_required
 def write_review(request, song_id, use_html=False):
 
     song = get_object_or_404(Song, id=song_id, status='open')
