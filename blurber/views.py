@@ -92,20 +92,57 @@ def upload_song(request):
         request, 'upload_song.html', {'form': form, 'song': song}
     )
 
+
+@staff_member_required
+def view_reviews(request, song_id):
+    # View all reviews for a song and change ordering
+
+    song = get_object_or_404(Song, id=song_id)
+    reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
+
+    return render(
+        request, 'view_reviews.html', {'form': False, 'song': song, 'reviews': reviews}
+    )
+
+
+@staff_member_required
+def move_review(request, review_id, direction="top"):
+    # Bump review to top or bottom
+    review = get_object_or_404(Review, id=review_id)
+    all_reviews = Review.objects.filter(song=review.song).order_by('sort_order')
+
+    if direction == 'top':
+        if review.sort_order > 0:
+            review.sort_order = 0
+            review.save()
+            for r in all_reviews.filter(sort_order__lt=review.sort_order):
+                r.sort_order += 1
+                r.save()
+    if direction == 'bottom':
+        if review.sort_order < all_reviews.count():
+            review.sort_order = all_reviews.count()
+            review.save()
+            for r in all_reviews.filter(sort_order__gt=review.sort_order):
+                r.sort_order -= 1
+                r.save()
+
+    return redirect('view_reviews', review.song.id)
+
+
 """
 TODO: output HTML for wordpress/tumblr
 - wordpress link up/publish
 - admin groups (editor, site admin)
-- sorting reviews ready for a post (via song list not admin?)
-- settings per post, turn on/off user ratings
+- sorting reviews ready for a post (via song list not admin?) (in progress)
+- settings per post, turn on/off user ratings (admin)
 - deleting blurbs (email alert to admins)
 - passwords etc
 Edit someone else's blurbs
-Look at all blurbs submitted for a song
+Look at all blurbs submitted for a song (in progress)
 Look at all blurbs submitted by someone
-Change the score (actually nobody has this ability at present, if I need to do it I just open the data and change manually)
-Upload a song
-Edit song info
-Schedule a day/remove the songs for a day
+Change the score
+- Upload a song (in progress)
+- Edit song info (admin)
+- Schedule a day/remove the songs for a day (admin)
 Post an entry
 """

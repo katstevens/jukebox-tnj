@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block page_title %}Sort reviews{% endblock %}
+
+{% block content %}
+	<div>
+		<br />
+		{{ song.title }} by {{ song.artist }} [<a href="{% url 'weekly_schedule' %}">Songlist</a>]
+	</div>
+	<div>
+		{% for r in reviews %}
+			<p><strong>{{ r.writer }} [{{ r.score }}]</strong></p>
+			<p>{{ r.blurb }}</p>
+			<a href="{% url 'move_review_top' r.id %}">Move to top</a>
+			<a href="{% url 'move_review_bottom' r.id %}">Move to bottom</a>
+		{% endfor %}
+	</div>
+	<br />
+{% endblock %}
