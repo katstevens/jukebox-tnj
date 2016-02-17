@@ -24,6 +24,7 @@ from blurber.views import (
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+
     url(r'^schedule/', weekly_schedule, name='weekly_schedule'),
     url(r'^song/(?P<song_id>\d+)$', write_review, name='write_review'),
     url(r'^song/(?P<song_id>\d+)/html/$', write_review, {'use_html': True}, name='write_review_html'),
@@ -36,7 +37,8 @@ urlpatterns = [
     url(r'^review/(?P<review_id>\d+)/movetop/$', move_review, {'direction': 'top'}, name='move_review_top'),
     url(r'^review/(?P<review_id>\d+)/movebottom/$', move_review, {'direction': 'bottom'}, name='move_review_bottom'),
 
-    url(r'^myblurbs/', include('writers.urls'))
+    url(r'^myblurbs/', include('writers.urls')),
+    url(r'', include('django.contrib.auth.urls'))
 ]
 
 if settings.DEBUG:
