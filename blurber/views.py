@@ -62,7 +62,7 @@ def write_review(request, song_id, use_html=False):
 
     return render(
         request,
-        'song.html',
+        'write_blurb.html',
         {
             'form': form,
             'song': song,
