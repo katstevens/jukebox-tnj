@@ -1,4 +1,5 @@
 from django.forms import ModelForm, ValidationError, ChoiceField
+from django.forms import modelformset_factory
 from django.forms.widgets import Select
 from blurber.models import Review, Song
 
@@ -38,3 +39,23 @@ class UploadSongForm(ModelForm):
     class Meta:
         model = Song
         fields = ['artist', 'title', 'youtube_link', 'web_link', 'mp3_link', 'mp3_file']
+
+
+class SortReviewForm(ModelForm):
+
+    class Meta:
+        model = Review
+        fields = ['sort_order']
+
+    def clean_sort_order(self):
+        # TODO: Figure out why this validation doesn't get raised
+        if self.cleaned_data['sort_order'] in ['', None]:
+            raise ValidationError('Please enter a valid sort order.')
+        return self.cleaned_data['sort_order']
+
+
+SortReviewsFormSet = modelformset_factory(
+    Review,
+    form=SortReviewForm,
+    extra=0
+)

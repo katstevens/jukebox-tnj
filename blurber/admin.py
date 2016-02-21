@@ -10,6 +10,14 @@ class SongAdmin(admin.ModelAdmin):
     search_fields = ['artist', 'title']
 
 
-admin.site.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+
+    list_display = ['song', 'writer', 'sort_order']
+    list_filter = ['status']
+    ordering = ['song__artist', 'song__title', 'sort_order']
+    search_fields = ['song__artist', 'song__title', 'writer__username', 'writer__first_name', 'writer__last_name']
+
+
+admin.site.register(Review, ReviewAdmin)
 admin.site.register(Song, SongAdmin)
 admin.site.register(ScheduledWeek)

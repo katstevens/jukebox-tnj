@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from blurber.models import Song, ScheduledWeek, Review
-from blurber.forms import ReviewForm, UploadSongForm
+from blurber.forms import ReviewForm, UploadSongForm, SortReviewsFormSet
 
 
 @login_required
@@ -103,8 +103,18 @@ def view_reviews(request, song_id):
     song = get_object_or_404(Song, id=song_id)
     reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
 
+    if request.method == 'POST':
+        formset = SortReviewsFormSet(data=request.POST)
+        if formset.is_valid():
+            instances = formset.save()
+
+            if 'submit_and_return_to_songlist' in request.POST:
+                return redirect('weekly_schedule')
+
     return render(
-        request, 'view_reviews.html', {'form': False, 'song': song, 'reviews': reviews}
+        request,
+        'view_reviews.html',
+        {'formset': SortReviewsFormSet(queryset=reviews), 'song': song, 'review_count': reviews.count()}
     )
 
 
@@ -136,12 +146,10 @@ def move_review(request, review_id, direction="top"):
 TODO: output HTML for wordpress/tumblr
 - wordpress link up/publish
 - admin groups (editor, site admin)
-- sorting reviews ready for a post (via song list not admin?) (in progress)
 - settings per post, turn on/off user ratings (admin)
 - deleting blurbs (email alert to admins)
 - passwords etc
 Edit someone else's blurbs
-Look at all blurbs submitted for a song (in progress)
 Look at all blurbs submitted by someone
 Change the score
 - Upload a song (in progress)

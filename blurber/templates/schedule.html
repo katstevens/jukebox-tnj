@@ -47,6 +47,9 @@
 					<a href="{% url 'write_review' song.id %}">Write blurb</a>
 				{% endif %} ({{ song.blurb_count }})
 			</td>
+			{% if request.user.is_staff %}
+			<td><a href="{% url 'view_reviews' song.id %}">Review all blurbs</a></td>
+			{% endif %}
 		</tr>
 	{% endfor %}
 	</table>
