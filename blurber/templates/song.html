@@ -19,18 +19,19 @@
 		{{ song.title }} by {{ song.artist }} [<a href="{% url 'weekly_schedule' %}">Go back</a>]
 	</div>
 	<div>
+		{% if form.non_field_errors %}
+			<div class="error-text">{{ form.non_field_errors }}</div>
+		{% endif %}
+
 		<form action="" method="post">
     		{% csrf_token %}
-			<select name="score" id="id_score">
-				<option value="99">-</option>
-				{% for i in score_limit %}
-				<option value="{{ i }}"{% if form.score.value == i %} selected="selected"{% endif %}>{{ i }}</option>
-				{% endfor %}
-			</select>
-			<br /><br />
-			
-			<textarea name="blurb" id="id_blurb" rows="15" cols="100">{{ form.blurb.value }}</textarea>
 
+			{{ form.score }}
+			{% if form.score.errors %}<span class="error-text">{{ form.score.errors }}</span>{% endif %}
+			<br /><br />
+
+			<textarea name="blurb" id="id_blurb" rows="15" cols="100">{{ form.blurb.value }}</textarea>
+			{% if form.blurb.errors %}<p class="error-text">{{ form.blurb.errors }}</p>{% endif %}
 			<br />
 			<input type="submit" name="submit_and_return_to_songlist" value="Submit and return to song list" />
 			<input type="submit" name="submit" value="Submit and stay on edit page" />
@@ -44,7 +45,7 @@
 	</div>
 	<br />
 	<div>
-	{% if preview_text %}
+	{% if preview_text and not form.errors %}
 		<strong>{{ request.user }}</strong>: {{ form.blurb.value|safe }}<br /><strong>[{{ form.score.value }}]</strong>
 	{% endif %}
 	</div>

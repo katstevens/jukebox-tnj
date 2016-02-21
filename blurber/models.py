@@ -83,7 +83,7 @@ class Review(models.Model):
     blurb = models.TextField(max_length=5000)
     score = models.IntegerField()
 
-    sort_order = models.IntegerField(default=0)
+    sort_order = models.IntegerField(default=1)
     status = models.CharField(choices=BLURB_STATUS_CHOICES, max_length=20, blank=True, null=True)
 
     create_date = models.DateTimeField(auto_now_add=True)
