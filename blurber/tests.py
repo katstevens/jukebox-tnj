@@ -1,7 +1,8 @@
+from datetime import datetime
 from django.test import TestCase
 
 from writers.models import Writer
-from blurber.models import Song, Review
+from blurber.models import Song, Review, ScheduledWeek
 
 
 class SongTests(TestCase):
@@ -114,3 +115,28 @@ class SongTests(TestCase):
         self.generate_additional_review(self.new_song, 9)
 
         self.assertEqual(self.new_song.average_score(), 5.67)
+
+
+class ScheduledWeekTests(TestCase):
+
+    def setUp(self):
+        self.new_song = Song.objects.create(
+            artist='Sisquo',
+            title='Thong Song',
+            status='new'
+        )
+
+    def test_weekdays(self):
+        s = ScheduledWeek.objects.create(
+            week_beginning=datetime(2015, 1, 1),
+        )
+        s.monday.add(self.new_song)
+
+        actual = s.weekdays()
+
+        self.assertQuerysetEqual(
+            actual[0]['songs'],
+            ['<Song: Sisquo - Thong Song>']
+        )
+        for i in range(1, 5):
+            self.assertQuerysetEqual(actual[i]['songs'], [])

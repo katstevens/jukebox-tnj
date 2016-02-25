@@ -97,17 +97,19 @@ class Review(models.Model):
 
 class ScheduledWeek(models.Model):
 
-    monday = models.ManyToManyField(Song, limit_choices_to={'status': 'open'}, related_name='mon_songs', blank=True)
-    tuesday = models.ManyToManyField(Song, limit_choices_to={'status': 'open'}, related_name='tue_songs', blank=True)
-    wednesday = models.ManyToManyField(Song, limit_choices_to={'status': 'open'}, related_name='wed_songs', blank=True)
-    thursday = models.ManyToManyField(Song, limit_choices_to={'status': 'open'}, related_name='thu_songs', blank=True)
-    friday = models.ManyToManyField(Song, limit_choices_to={'status': 'open'}, related_name='fri_songs', blank=True)
-    saturday = models.ManyToManyField(Song, limit_choices_to={'status': 'open'}, related_name='sat_songs', blank=True)
-    sunday = models.ManyToManyField(Song, limit_choices_to={'status': 'open'}, related_name='sun_songs', blank=True)
+    default_kwargs = {'limit_choices_to' : {'status': 'open'}, 'blank': True}
+
+    monday = models.ManyToManyField(Song, related_name='mon_songs', **default_kwargs)
+    tuesday = models.ManyToManyField(Song, related_name='tue_songs', **default_kwargs)
+    wednesday = models.ManyToManyField(Song, related_name='wed_songs', **default_kwargs)
+    thursday = models.ManyToManyField(Song, related_name='thu_songs', **default_kwargs)
+    friday = models.ManyToManyField(Song, related_name='fri_songs', **default_kwargs)
+    saturday = models.ManyToManyField(Song, related_name='sat_songs', **default_kwargs)
+    sunday = models.ManyToManyField(Song, related_name='sun_songs', **default_kwargs)
 
     week_beginning = models.DateField()
     week_info = models.TextField(max_length=4000)
-    current_week = models.BooleanField(help_text="Show as the current scheduled week")
+    current_week = models.BooleanField(help_text="Show as the current scheduled week", default=False)
 
     def __str__(self):
         return self.week_beginning.strftime("%D/%M/%Y")
