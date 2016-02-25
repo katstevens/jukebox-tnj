@@ -45,25 +45,28 @@ class Song(models.Model):
     def saved_reviews(self):
         return self.review_set.filter(song=self, status__in=['saved', 'published'])
 
+    @property
     def blurb_count(self):
         return self.saved_reviews().count()
 
+    @property
     def css_class(self):
         if self.status == 'published':
             return 'dead'
-        if self.blurb_count() == 0:
+        if self.blurb_count == 0:
             return 'new'
-        elif self.blurb_count() > 10:
+        elif self.blurb_count > 10:
             return 'closing'
-        elif self.blurb_count() > 5:
+        elif self.blurb_count > 5:
             return 'publish'
         return 'open'
 
+    @property
     def closed(self):
         return True if self.status == 'published' else False
 
     def average_score(self):
-        if self.blurb_count() > 0:
+        if self.blurb_count > 0:
             score_avg = self.saved_reviews().aggregate(models.Avg('score'))
             return round(score_avg.get('score__avg', 0), 2)
         return 0

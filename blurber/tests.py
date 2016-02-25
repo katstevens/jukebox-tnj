@@ -47,7 +47,7 @@ class SongTests(TestCase):
 
     def test_blurb_count(self):
 
-        self.assertEqual(self.song.blurb_count(), 1)
+        self.assertEqual(self.song.blurb_count, 1)
 
     def generate_additional_review(self, song, i):
         w = Writer.objects.create(
@@ -65,36 +65,36 @@ class SongTests(TestCase):
     def test_css_class_for_blurb_ranges(self):
 
         # No blurbs
-        self.assertEqual(self.new_song.css_class(), 'new')
+        self.assertEqual(self.new_song.css_class, 'new')
 
         # Get first 5
         for i in range(0, 5):
             self.generate_additional_review(self.new_song, i)
-            self.assertEqual(self.new_song.css_class(), 'open')
+            self.assertEqual(self.new_song.css_class, 'open')
 
         # Get next 5
         for i in range(5, 10):
             self.generate_additional_review(self.new_song, i)
-            self.assertEqual(self.new_song.css_class(), 'publish')
+            self.assertEqual(self.new_song.css_class, 'publish')
 
         # Add 1 more
         self.generate_additional_review(self.new_song, 10)
-        self.assertEqual(self.new_song.css_class(), 'closing')
+        self.assertEqual(self.new_song.css_class, 'closing')
 
         # We should have 11 blurbs now
-        self.assertEqual(self.new_song.blurb_count(), 11)
+        self.assertEqual(self.new_song.blurb_count, 11)
 
     def test_css_class_for_published_song_is_dead(self):
 
-        self.assertTrue(self.published_song.css_class(), 'dead')
+        self.assertTrue(self.published_song.css_class, 'dead')
 
     def test_closed_is_false_for_open_status(self):
 
-        self.assertFalse(self.song.closed())
+        self.assertFalse(self.song.closed)
 
     def test_closed_is_true_for_published_status(self):
 
-        self.assertTrue(self.published_song.closed())
+        self.assertTrue(self.published_song.closed)
 
     def test_average_score_is_zero_for_zero_blurb_count(self):
 
