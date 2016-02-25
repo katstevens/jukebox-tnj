@@ -37,7 +37,7 @@ class Song(models.Model):
 
     wordpress_post_id = models.CharField(max_length=50, null=True, blank=True)
     display_user_ratings = models.BooleanField(default=True)
-    status = models.CharField(choices=SONG_STATUS_CHOICES, max_length=20)
+    status = models.CharField(choices=SONG_STATUS_CHOICES, max_length=20, default='open')
 
     publish_date = models.DateTimeField(help_text="Schedule a publish time here", null=True, blank=True)
     upload_date = models.DateTimeField(auto_now_add=True)
@@ -63,9 +63,9 @@ class Song(models.Model):
         return True if self.status == 'published' else False
 
     def average_score(self):
-        # TODO: figure out what floats etc are needed here
         if self.blurb_count() > 0:
-            return self.saved_reviews().values_list('score', flat=True) / self.blurb_count()
+            score_avg = self.saved_reviews().aggregate(models.Avg('score'))
+            return round(score_avg.get('score__avg', 0), 2)
         return 0
 
     def __str__(self):
@@ -84,7 +84,7 @@ class Review(models.Model):
     score = models.IntegerField()
 
     sort_order = models.IntegerField(default=1)
-    status = models.CharField(choices=BLURB_STATUS_CHOICES, max_length=20, blank=True, null=True)
+    status = models.CharField(choices=BLURB_STATUS_CHOICES, max_length=20, default='draft')
 
     create_date = models.DateTimeField(auto_now_add=True)
 
