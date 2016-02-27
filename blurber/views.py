@@ -128,22 +128,43 @@ def view_reviews(request, song_id):
 def move_review(request, review_id, direction="top"):
     # Bump review to top or bottom
     review = get_object_or_404(Review, id=review_id)
-    all_reviews = Review.objects.filter(song=review.song).order_by('sort_order')
+    all_reviews = Review.objects.filter(song=review.song, status='saved').order_by('sort_order')
 
-    if direction == 'top':
-        if review.sort_order > 0:
-            review.sort_order = 0
+    all_other_reviews = all_reviews.exclude(id=review.id)
+    total = all_other_reviews.count()
+    other_review_list = list(all_other_reviews)
+
+    # Update our review
+    if direction in ['top', 'bottom']:
+        offset = 1
+        if direction == 'top':
+            review.sort_order = 1
+            offset = 2
+        if direction == 'bottom':
+            review.sort_order = total + 1
+        review.save()
+
+        # Update rest of reviews in order
+        for i in range(0, total):
+            r = other_review_list.pop()
+            r.sort_order = i + offset
+            r.save()
+
+    if direction in ['up', 'down']:
+        swap = None
+        if direction == 'up':
+            prev_reviews = all_other_reviews.filter(sort_order__lt=review.sort_order)
+            if prev_reviews:
+                swap = prev_reviews.last()
+        if direction == 'down':
+            next_reviews = all_other_reviews.filter(sort_order__gt=review.sort_order)
+            if next_reviews:
+                swap = next_reviews.first()
+
+        if swap:
+            swap.sort_order, review.sort_order = review.sort_order, swap.sort_order
+            swap.save()
             review.save()
-            for r in all_reviews.filter(sort_order__lt=review.sort_order):
-                r.sort_order += 1
-                r.save()
-    if direction == 'bottom':
-        if review.sort_order < all_reviews.count():
-            review.sort_order = all_reviews.count()
-            review.save()
-            for r in all_reviews.filter(sort_order__gt=review.sort_order):
-                r.sort_order -= 1
-                r.save()
 
     return redirect('view_reviews', review.song.id)
 

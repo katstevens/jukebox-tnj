@@ -29,6 +29,12 @@
 					<td>
 					{{ form.sort_order }}
 					</td>
+					<td>
+						<a href="{% url 'move_review_top' form.instance.id %}">Move to top</a><br />
+						<a href="{% url 'move_review_up' form.instance.id %}">Move up</a><br />
+						<a href="{% url 'move_review_down' form.instance.id %}">Move down</a><br />
+						<a href="{% url 'move_review_bottom' form.instance.id %}">Move to bottom</a>
+					</td>
 					{% if form.sort_order.errors %}
 					<td>
 						<p class="error-text">{{ form.sort_order.errors }}</p>
