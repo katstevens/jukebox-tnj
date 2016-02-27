@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from blurber.models import Song, ScheduledWeek, Review
-from blurber.forms import ReviewForm, UploadSongForm, SortReviewsFormSet
+from blurber.forms import ReviewForm, UploadSongForm
 
 
 @login_required
@@ -103,20 +103,11 @@ def view_reviews(request, song_id):
     song = get_object_or_404(Song, id=song_id)
     reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
 
-    if request.method == 'POST':
-        formset = SortReviewsFormSet(data=request.POST)
-        if formset.is_valid():
-            instances = formset.save()
-            success = True
-
-            if 'submit_and_return_to_songlist' in request.POST:
-                return redirect('weekly_schedule')
-
     return render(
         request,
         'view_reviews.html',
         {
-            'formset': SortReviewsFormSet(queryset=reviews),
+            'reviews': reviews,
             'song': song,
             'review_count': reviews.count(),
             'success': True
@@ -131,40 +122,39 @@ def move_review(request, review_id, direction="top"):
     all_reviews = Review.objects.filter(song=review.song, status='saved').order_by('sort_order')
 
     all_other_reviews = all_reviews.exclude(id=review.id)
-    total = all_other_reviews.count()
-    other_review_list = list(all_other_reviews)
 
-    # Update our review
-    if direction in ['top', 'bottom']:
-        offset = 1
-        if direction == 'top':
-            review.sort_order = 1
-            offset = 2
-        if direction == 'bottom':
-            review.sort_order = total + 1
-        review.save()
+    if direction == 'top':
+        new_review_list = [review] + list(all_other_reviews)
+    elif direction == 'bottom':
+        new_review_list = list(all_other_reviews) + [review]
+    else:
+        review_index = None
+        for index, item in enumerate(all_reviews):
+            if item.id == review.id:
+                review_index = index
+                break
 
-        # Update rest of reviews in order
-        for i in range(0, total):
-            r = other_review_list.pop()
-            r.sort_order = i + offset
-            r.save()
-
-    if direction in ['up', 'down']:
-        swap = None
+        new_review_list = list(all_reviews)
         if direction == 'up':
-            prev_reviews = all_other_reviews.filter(sort_order__lt=review.sort_order)
-            if prev_reviews:
-                swap = prev_reviews.last()
-        if direction == 'down':
-            next_reviews = all_other_reviews.filter(sort_order__gt=review.sort_order)
-            if next_reviews:
-                swap = next_reviews.first()
+            # Swap review with previous (if there)
+            if review_index > 0:
+                new_review_list[review_index-1], \
+                new_review_list[review_index] = \
+                    review, \
+                    new_review_list[review_index-1]
 
-        if swap:
-            swap.sort_order, review.sort_order = review.sort_order, swap.sort_order
-            swap.save()
-            review.save()
+        if direction == 'down':
+            # Swap review with next (if there)
+            if review_index + 1 < len(new_review_list):
+                new_review_list[review_index+1], \
+                new_review_list[review_index] = \
+                    review, \
+                    new_review_list[review_index+1]
+
+    # Now re-sort everything
+    for i in range(0, all_reviews.count()):
+        new_review_list[i].sort_order = i+1
+        new_review_list[i].save()
 
     return redirect('view_reviews', review.song.id)
 

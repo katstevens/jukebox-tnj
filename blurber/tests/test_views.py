@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from writers.models import Writer
 from blurber.models import Song, Review, ScheduledWeek
-from blurber.forms import ReviewForm, UploadSongForm, SortReviewsFormSet
+from blurber.forms import ReviewForm, UploadSongForm
 
 
 class BlurberBaseViewTests(TestCase):
@@ -326,59 +326,102 @@ class ViewReviewsTest(BlurberBaseViewTests):
         resp = self.client.get(url)
 
         self.assertTemplateUsed(resp, 'view_reviews.html')
-        self.assertIsInstance(resp.context['formset'], SortReviewsFormSet)
+        self.assertQuerysetEqual(resp.context['reviews'], ['<Review: 2NE1 - I Am The Best: MW>'])
         self.assertEqual(resp.context['song'], self.song)
         self.assertEqual(resp.context['review_count'], 1)
 
-    def test_changing_sort_order_of_blurbs(self):
-        r = self.client.force_login(self.editor)
-        extra_review = Review.objects.create(
-            song=self.song,
-            writer=self.generate_writer('everett@true.com'),
-            blurb='Dash it all',
-            score=3
-        )
-        # Default sort order is 1
-        self.assertEqual(self.saved_review.sort_order, 1)
-        self.assertEqual(extra_review.sort_order, 1)
+    def assert_review_moved_to_position(self, url, expected_position):
 
-        resp = self.client.post(
-            reverse('view_reviews', kwargs={'song_id': self.song.id }),
-            data = {
-                'form-TOTAL_FORMS': 2,
-                'form-INITIAL_FORMS': 2,
-                'form-0-id': self.song.id,
-                'form-0-sort_order': 2,
-                'form-1-id': extra_review.id,
-                'form-1-sort_order': 1
-            }
-        )
+        for i in range(3):
+            Review.objects.create(
+                song=self.song,
+                writer=self.generate_writer('writer%s@place%s.com' % (i, i)),
+                blurb='Somewhat repetitive',
+                status='saved',
+                score=i,
+                sort_order=i+1
+            )
+
+        resp = self.client.get(url, follow=True)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.context['review_count'], 2)
-        self.assertEqual(resp.context['formset'].errors, [])
+        self.assertEqual(resp.context['review_count'], 4)
 
-        # Look up newly saved DB values
-        saved = Review.objects.get(id=self.saved_review.id)
-        extra = Review.objects.get(id=extra_review.id)
-        self.assertEqual(saved.sort_order, 2)
-        self.assertEqual(extra.sort_order, 1)
-
-    def test_bad_sort_order_doesnt_save_to_review(self):
-
-        r = self.client.force_login(self.editor)
-        self.assertEqual(self.saved_review.sort_order, 1)
-
-        resp = self.client.post(
-            reverse('view_reviews', kwargs={'song_id': self.song.id }),
-            data = {
-                'form-TOTAL_FORMS': 1,
-                'form-INITIAL_FORMS': 1,
-                'form-0-id': self.song.id,
-                'form-0-sort_order': 'badgers'
-            }
+        # Review should be sorted in consecutive ascending order
+        self.assertQuerysetEqual(
+            resp.context['reviews'].values_list('sort_order', flat=True),
+            ['1', '2', '3', '4'],
         )
-        # Shouldn't have updated saved review
-        self.assertEqual(self.saved_review.sort_order, 1)
+        # Check our saved review is in expected position
+        self.assertEqual(
+            resp.context['reviews'][expected_position].id,
+            self.saved_review.id
+        )
 
-        # TODO: find a way of properly raising the error.
-        #self.assertFormsetError(resp, 'formset', 0, 'sort_order', 'Enter a valid integer.')
+    def test_move_existing_top_review_to_top(self):
+        r = self.client.force_login(self.editor)
+        url = reverse('move_review_top', kwargs={'review_id': self.saved_review.id})
+
+        # Should be 1/4 in queryset
+        self.assert_review_moved_to_position(url, 0)
+
+    def test_move_non_top_review_to_top(self):
+        r = self.client.force_login(self.editor)
+        # Put sort order as something wacky
+        self.saved_review.sort_order = 8
+        self.saved_review.save()
+        url = reverse('move_review_top', kwargs={'review_id': self.saved_review.id})
+
+        # Should be 1/4 in queryset
+        self.assert_review_moved_to_position(url, 0)
+
+    def test_move_existing_bottom_review_to_bottom(self):
+        r = self.client.force_login(self.editor)
+        self.saved_review.sort_order = 8
+        self.saved_review.save()
+        url = reverse('move_review_bottom', kwargs={'review_id': self.saved_review.id})
+
+        # Should be 1/4 in queryset
+        self.assert_review_moved_to_position(url, 3)
+
+    def test_move_non_bottom_review_to_bottom(self):
+        r = self.client.force_login(self.editor)
+        self.saved_review.sort_order = 1
+        self.saved_review.save()
+        url = reverse('move_review_bottom', kwargs={'review_id': self.saved_review.id})
+
+        # Should be 1/4 in queryset
+        self.assert_review_moved_to_position(url, 3)
+
+    def test_move_non_top_review_up_one_spot(self):
+        r = self.client.force_login(self.editor)
+        self.saved_review.sort_order = 8
+        self.saved_review.save()
+        url = reverse('move_review_up', kwargs={'review_id': self.saved_review.id})
+
+        # Should be 3/4 in queryset
+        self.assert_review_moved_to_position(url, 2)
+
+    def test_move_top_review_up_one_spot(self):
+        r = self.client.force_login(self.editor)
+        url = reverse('move_review_up', kwargs={'review_id': self.saved_review.id})
+
+        # Should still be 1/4 in queryset
+        self.assert_review_moved_to_position(url, 0)
+
+    def test_move_bottom_review_down_one_spot(self):
+        r = self.client.force_login(self.editor)
+        self.saved_review.sort_order = 8
+        self.saved_review.save()
+        url = reverse('move_review_down', kwargs={'review_id': self.saved_review.id})
+
+        # Should be 4/4 in queryset
+        self.assert_review_moved_to_position(url, 3)
+
+    def test_move_non_bottom_review_down_one_spot(self):
+        r = self.client.force_login(self.editor)
+        self.saved_review.sort_order = 2
+        self.saved_review.save()
+        url = reverse('move_review_down', kwargs={'review_id': self.saved_review.id})
+
+        # Should be 3/4 in queryset
+        self.assert_review_moved_to_position(url, 2)

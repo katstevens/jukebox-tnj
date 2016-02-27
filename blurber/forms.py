@@ -1,5 +1,4 @@
-from django.forms import ModelForm, ValidationError, ChoiceField, IntegerField
-from django.forms import modelformset_factory
+from django.forms import ModelForm, ValidationError, ChoiceField
 from django.forms.widgets import Select
 from blurber.models import Review, Song
 
@@ -39,22 +38,3 @@ class UploadSongForm(ModelForm):
     class Meta:
         model = Song
         fields = ['artist', 'title', 'youtube_link', 'web_link', 'mp3_link', 'mp3_file']
-
-
-class SortReviewForm(ModelForm):
-
-    class Meta:
-        model = Review
-        fields = ['sort_order']
-
-    def __init__(self, *args, **kwargs):
-        # This doesn't seem to work with the formset.
-        super(SortReviewForm, self).__init__(*args, **kwargs)
-        self.fields['sort_order'].required = True
-
-
-SortReviewsFormSet = modelformset_factory(
-    Review,
-    form=SortReviewForm,
-    extra=0
-)

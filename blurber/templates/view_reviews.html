@@ -15,40 +15,26 @@
 	<div>
 		<table>
 			<tr><td>Review</td><td>Order</td></tr>
-		<form method="post" action="">
-			{% csrf_token %}
-			{{ formset.management_form }}
-			{% for form in formset %}
-				{{ form.id }}
+
+			{% for r in reviews %}
 				<tr>
 					<td>
-						<p>{{ form.instance.writer }}</p>
-						{{ form.instance.blurb|safe }}
-						<strong>[{{ form.instance.score }}]</strong>
+						<p>{{ r.writer }}</p>
+						{{ r.blurb|safe }}
+						<strong>[{{ r.score }}]</strong>
 					</td>
 					<td>
-					{{ form.sort_order }}
+					{{ r.sort_order }}
 					</td>
 					<td>
-						<a href="{% url 'move_review_top' form.instance.id %}">Move to top</a><br />
-						<a href="{% url 'move_review_up' form.instance.id %}">Move up</a><br />
-						<a href="{% url 'move_review_down' form.instance.id %}">Move down</a><br />
-						<a href="{% url 'move_review_bottom' form.instance.id %}">Move to bottom</a>
+						<a href="{% url 'move_review_top' r.id %}">Move to top</a><br />
+						<a href="{% url 'move_review_up' r.id %}">Move up</a><br />
+						<a href="{% url 'move_review_down' r.id %}">Move down</a><br />
+						<a href="{% url 'move_review_bottom' r.id %}">Move to bottom</a>
 					</td>
-					{% if form.sort_order.errors %}
-					<td>
-						<p class="error-text">{{ form.sort_order.errors }}</p>
-					</td>
-					{% endif %}
 				</tr>
 			{% endfor %}
-			<tr><td colspan="2">
-				<input type="submit" name="submit_and_return_to_songlist" value="Save and return to song list" />
-				<input type="submit" name="submit" value="Save and stay on sorting page" />
-			</td></tr>
-		</form>
 		</table>
-		{% if formset.errors %}{{ formset.errors }}{% endif %}
 	</div>
 	<div>
 		TODO: Get HTML.
