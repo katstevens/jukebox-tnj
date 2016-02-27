@@ -4,10 +4,10 @@ from django.test import TestCase
 
 from writers.models import Writer
 from blurber.models import Song, Review, ScheduledWeek
-from blurber.forms import ReviewForm
+from blurber.forms import ReviewForm, UploadSongForm
 
 
-class BlurberViewTests(TestCase):
+class BlurberBaseViewTests(TestCase):
 
     def setUp(self):
         self.song = Song.objects.create(
@@ -56,7 +56,7 @@ class BlurberViewTests(TestCase):
         )
 
 
-class ScheduleViewTests(BlurberViewTests):
+class ScheduleViewTests(BlurberBaseViewTests):
 
     def test_weekly_schedule_prompts_login_for_anon_user(self):
 
@@ -100,7 +100,7 @@ class ScheduleViewTests(BlurberViewTests):
         self.assertContains(resp, 'Review all blurbs')
 
 
-class WriteReviewViewTests(BlurberViewTests):
+class WriteReviewViewTests(BlurberBaseViewTests):
 
     def assert_response_content_for_new_song(self, resp, song, use_html=False):
 
@@ -217,3 +217,65 @@ class WriteReviewViewTests(BlurberViewTests):
         # We've just edited an existing review so the blurb count should
         # stay the same
         self.assertEqual(self.song.blurb_count, 1)
+
+
+class UploadSongTests(BlurberBaseViewTests):
+
+    def test_upload_song_form_hidden_for_writer(self):
+        r = self.client.force_login(self.writer)
+
+        resp = self.client.get(reverse('upload_song'), follow=True)
+
+        self.assertRedirects(resp, '/login/?next=%s' % reverse('upload_song'))
+        self.assertContains(resp, "Your account doesn't have access to this page.")
+
+    def test_upload_song_form_displays_for_editor(self):
+        r = self.client.force_login(self.editor)
+
+        resp = self.client.get(reverse('upload_song'))
+
+        self.assertTemplateUsed(resp, 'upload_song.html')
+        self.assertIsInstance(resp.context['form'], UploadSongForm)
+        self.assertFalse(resp.context['song'])
+
+    def test_submit_upload_song_form_and_continue_uploading_shows_new_form(self):
+        r = self.client.force_login(self.editor)
+
+        resp = self.client.post(
+            reverse('upload_song'),
+            data={
+                'artist': 'Roxy Music',
+                'title': 'Love Is 1x Drug',
+                'mp3_link': 'http://123.com'
+            }
+        )
+        # Song should be saved
+        newly_uploaded_song = Song.objects.filter(title='Love Is 1x Drug')
+        self.assertEqual(newly_uploaded_song.count(), 1)
+        self.assertEqual(resp.context['song'], newly_uploaded_song[0])
+
+        # Success message displayed
+        self.assertContains(resp, '<em>Roxy Music - Love Is 1x Drug</em> successfully uploaded.')
+        # Blank form displayed
+        self.assertEqual(resp.context['form']['artist'].value(), None)
+
+    def test_submit_upload_song_form_and_return_to_schedule_does_redirect(self):
+        r = self.client.force_login(self.editor)
+
+        resp = self.client.post(
+            reverse('upload_song'),
+            data={
+                'artist': 'Buzzcocks',
+                'title': 'Boredom',
+                'mp3_link': 'http://123.com',
+                'submit_and_return_to_songlist': True
+            },
+            follow=True
+        )
+        # Song should be saved
+        newly_uploaded_song = Song.objects.filter(title='Boredom')
+        self.assertEqual(newly_uploaded_song.count(), 1)
+
+        self.assertRedirects(resp, reverse('weekly_schedule'))
+        # New song should be shown in the list
+        self.assertContains(resp, '<strong>Buzzcocks</strong> - Boredom')

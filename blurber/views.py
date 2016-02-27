@@ -66,14 +66,13 @@ def write_review(request, song_id, use_html=False):
         {
             'form': form,
             'song': song,
-            'score_limit': range(0,11),
             'preview_text': preview_text,
             'use_html': use_html
         }
     )
 
 
-@staff_member_required
+@staff_member_required(login_url="login")
 def upload_song(request):
 
     song = False
@@ -96,7 +95,7 @@ def upload_song(request):
     )
 
 
-@staff_member_required
+@staff_member_required(login_url="login")
 def view_reviews(request, song_id):
     # View all reviews for a song and change ordering
 
@@ -118,7 +117,7 @@ def view_reviews(request, song_id):
     )
 
 
-@staff_member_required
+@staff_member_required(login_url="login")
 def move_review(request, review_id, direction="top"):
     # Bump review to top or bottom
     review = get_object_or_404(Review, id=review_id)
