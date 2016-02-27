@@ -12,7 +12,7 @@ class Writer(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
 
-    bio_link = models.URLField()
+    bio_link = models.URLField(blank=True, null=True)
 
     date_joined = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
