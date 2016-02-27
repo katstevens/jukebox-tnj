@@ -6,8 +6,11 @@
 {% block content %}
 	<div>
 		<br />
-		{{ song.title }} by {{ song.artist }} [<a href="{% url 'weekly_schedule' %}">Songlist</a>]
+		<strong>{{ song.title }} by {{ song.artist }}</strong> [<a href="{% url 'weekly_schedule' %}">Songlist</a>]
 		<p>{{ review_count }} review(s)</p>
+		{% if success %}
+		<p><em>Sort order updated.</em></p>
+		{% endif %}
 	</div>
 	<div>
 		<table>
@@ -20,15 +23,17 @@
 				<tr>
 					<td>
 						<p>{{ form.instance.writer }}</p>
-						{{ form.instance.blurb }}
+						{{ form.instance.blurb|safe }}
 						<strong>[{{ form.instance.score }}]</strong>
-						{% if form.errors %}
-						<p class="error-text">{{ form.errors }}</p>
-						{% endif %}
 					</td>
 					<td>
 					{{ form.sort_order }}
 					</td>
+					{% if form.sort_order.errors %}
+					<td>
+						<p class="error-text">{{ form.sort_order.errors }}</p>
+					</td>
+					{% endif %}
 				</tr>
 			{% endfor %}
 			<tr><td colspan="2">
@@ -38,6 +43,9 @@
 		</form>
 		</table>
 		{% if formset.errors %}{{ formset.errors }}{% endif %}
+	</div>
+	<div>
+		TODO: Get HTML.
 	</div>
 	<br />
 {% endblock %}

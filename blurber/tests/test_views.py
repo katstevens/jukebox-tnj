@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from writers.models import Writer
 from blurber.models import Song, Review, ScheduledWeek
-from blurber.forms import ReviewForm, UploadSongForm
+from blurber.forms import ReviewForm, UploadSongForm, SortReviewsFormSet
 
 
 class BlurberBaseViewTests(TestCase):
@@ -54,6 +54,13 @@ class BlurberBaseViewTests(TestCase):
             title='Beez in the Trap',
             status='open'
         )
+
+    def assert_view_hidden_for_writer(self, url):
+        r = self.client.force_login(self.writer)
+        resp = self.client.get(url, follow=True)
+
+        self.assertRedirects(resp, '/login/?next=%s' % url)
+        self.assertContains(resp, "Your account doesn't have access to this page.")
 
 
 class ScheduleViewTests(BlurberBaseViewTests):
@@ -222,12 +229,7 @@ class WriteReviewViewTests(BlurberBaseViewTests):
 class UploadSongTests(BlurberBaseViewTests):
 
     def test_upload_song_form_hidden_for_writer(self):
-        r = self.client.force_login(self.writer)
-
-        resp = self.client.get(reverse('upload_song'), follow=True)
-
-        self.assertRedirects(resp, '/login/?next=%s' % reverse('upload_song'))
-        self.assertContains(resp, "Your account doesn't have access to this page.")
+        self.assert_view_hidden_for_writer(reverse('upload_song'))
 
     def test_upload_song_form_displays_for_editor(self):
         r = self.client.force_login(self.editor)
@@ -310,3 +312,73 @@ class UploadSongTests(BlurberBaseViewTests):
         self.assertRedirects(resp, reverse('weekly_schedule'))
         # New song should be shown in the list
         self.assertContains(resp, '<strong>Buzzcocks</strong> - Boredom')
+
+
+class ViewReviewsTest(BlurberBaseViewTests):
+
+    def test_review_list_hidden_for_writer(self):
+        url = reverse('view_reviews', kwargs={'song_id': self.song.id })
+        self.assert_view_hidden_for_writer(url)
+
+    def test_upload_song_form_displays_for_editor(self):
+        r = self.client.force_login(self.editor)
+        url = reverse('view_reviews', kwargs={'song_id': self.song.id })
+        resp = self.client.get(url)
+
+        self.assertTemplateUsed(resp, 'view_reviews.html')
+        self.assertIsInstance(resp.context['formset'], SortReviewsFormSet)
+        self.assertEqual(resp.context['song'], self.song)
+        self.assertEqual(resp.context['review_count'], 1)
+
+    def test_changing_sort_order_of_blurbs(self):
+        r = self.client.force_login(self.editor)
+        extra_review = Review.objects.create(
+            song=self.song,
+            writer=self.generate_writer('everett@true.com'),
+            blurb='Dash it all',
+            score=3
+        )
+        # Default sort order is 1
+        self.assertEqual(self.saved_review.sort_order, 1)
+        self.assertEqual(extra_review.sort_order, 1)
+
+        resp = self.client.post(
+            reverse('view_reviews', kwargs={'song_id': self.song.id }),
+            data = {
+                'form-TOTAL_FORMS': 2,
+                'form-INITIAL_FORMS': 2,
+                'form-0-id': self.song.id,
+                'form-0-sort_order': 2,
+                'form-1-id': extra_review.id,
+                'form-1-sort_order': 1
+            }
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.context['review_count'], 2)
+        self.assertEqual(resp.context['formset'].errors, [])
+
+        # Look up newly saved DB values
+        saved = Review.objects.get(id=self.saved_review.id)
+        extra = Review.objects.get(id=extra_review.id)
+        self.assertEqual(saved.sort_order, 2)
+        self.assertEqual(extra.sort_order, 1)
+
+    def test_bad_sort_order_doesnt_save_to_review(self):
+
+        r = self.client.force_login(self.editor)
+        self.assertEqual(self.saved_review.sort_order, 1)
+
+        resp = self.client.post(
+            reverse('view_reviews', kwargs={'song_id': self.song.id }),
+            data = {
+                'form-TOTAL_FORMS': 1,
+                'form-INITIAL_FORMS': 1,
+                'form-0-id': self.song.id,
+                'form-0-sort_order': 'badgers'
+            }
+        )
+        # Shouldn't have updated saved review
+        self.assertEqual(self.saved_review.sort_order, 1)
+
+        # TODO: find a way of properly raising the error.
+        #self.assertFormsetError(resp, 'formset', 0, 'sort_order', 'Enter a valid integer.')

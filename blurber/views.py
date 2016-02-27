@@ -99,7 +99,7 @@ def upload_song(request):
 @staff_member_required(login_url="login")
 def view_reviews(request, song_id):
     # View all reviews for a song and change ordering
-
+    success = False
     song = get_object_or_404(Song, id=song_id)
     reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
 
@@ -107,6 +107,7 @@ def view_reviews(request, song_id):
         formset = SortReviewsFormSet(data=request.POST)
         if formset.is_valid():
             instances = formset.save()
+            success = True
 
             if 'submit_and_return_to_songlist' in request.POST:
                 return redirect('weekly_schedule')
@@ -114,7 +115,12 @@ def view_reviews(request, song_id):
     return render(
         request,
         'view_reviews.html',
-        {'formset': SortReviewsFormSet(queryset=reviews), 'song': song, 'review_count': reviews.count()}
+        {
+            'formset': SortReviewsFormSet(queryset=reviews),
+            'song': song,
+            'review_count': reviews.count(),
+            'success': True
+        }
     )
 
 
