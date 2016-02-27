@@ -15,7 +15,7 @@ class SongTests(TestCase):
         self.new_song = Song.objects.create(
             artist='Kate Bush',
             title='Washing Machine',
-            status='new'
+            status='open'
         )
         self.published_song = Song.objects.create(
             artist='Brandy & Monica',
