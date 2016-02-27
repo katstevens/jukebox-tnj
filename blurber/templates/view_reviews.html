@@ -6,7 +6,7 @@
 {% block content %}
 	<div>
 		<br />
-		<strong>{{ song.title }} by {{ song.artist }}</strong> [<a href="{% url 'weekly_schedule' %}">Songlist</a>]
+		<strong>{{ song.title }} by {{ song.artist }}</strong>
 		<p>{{ review_count }} review(s)</p>
 		{% if success %}
 		<p><em>Sort order updated.</em></p>

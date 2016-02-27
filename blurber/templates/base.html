@@ -16,8 +16,21 @@
 		The Singles Jukebox: {% block page_title %}{% endblock %}
 	</h1>
 
-	{% block content %}
+	{% block header_links %}
+		<div class="writer-info">
+			{{ request.user.get_short_name }}:
+			<a href="{% url 'weekly_schedule' %}">[Schedule]</a>
+			<a href="{% url 'my_blurbs' %}">[My blurbs]</a>
+			{% if request.user.is_staff %}
+				<a href="{% url 'upload_song' %}">[New song]</a>
+				<a href="">[Userlist]</a>
+				<a href="{% url 'admin:blurber_review_changelist' %}">[Review log]</a>
+			{% endif %}
+			<a href="http://furanes.net/blurbs/sitefaq.html">[Site FAQ]</a>
+		</div>
+	{% endblock %}
 
+	{% block content %}
 	{% endblock %}
 
 </div>

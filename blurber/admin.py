@@ -12,7 +12,7 @@ class SongAdmin(admin.ModelAdmin):
 
 class ReviewAdmin(admin.ModelAdmin):
 
-    list_display = ['song', 'writer', 'sort_order']
+    list_display = ['song', 'writer', 'score']
     list_filter = ['status']
     ordering = ['song__artist', 'song__title', 'sort_order']
     search_fields = ['song__artist', 'song__title', 'writer__username', 'writer__first_name', 'writer__last_name']

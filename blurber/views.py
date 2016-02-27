@@ -126,7 +126,7 @@ def view_reviews(request, song_id):
 
 @staff_member_required(login_url="login")
 def move_review(request, review_id, direction="top"):
-    # Bump review to top or bottom
+    # Bump review to top or bottom, or swap with its neighbour
     review = get_object_or_404(Review, id=review_id)
     all_reviews = Review.objects.filter(song=review.song, status='saved').order_by('sort_order')
 
