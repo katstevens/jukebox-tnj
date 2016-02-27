@@ -13,7 +13,25 @@
 	<div>
 		<form action="" method="post">
     		{% csrf_token %}
-			{{ form.as_p }}
+			<table>
+				<tr><td>Artist*:</td><td>Title*:</td>
+				</tr>
+				<tr><td>{{ form.artist }}</td><td>{{ form.title }}</td>
+					{% if form.artist.errors or form.title.errors %}
+					<td>Please enter an artist and title.</td>
+					{% endif %}
+				</tr>
+				<tr><td colspan="2">Media links</td>
+				</tr>
+				<tr><td>Upload mp3 file:</td><td>{{ form.mp3_file }}</td>
+				</tr>
+				<tr><td>MP3 URL:</td><td>{{ form.mp3_link }}</td>
+				</tr>
+    			<tr><td>Youtube URL:</td><td>{{ form.youtube_link }}</td>
+				</tr>
+    			<tr><td>Other URL:</td><td>{{ form.web_link }}</td>
+				</tr>
+			</table>
 			<br />
 			<input type="submit" name="submit" value="Submit and upload another song" />
 			<input type="submit" name="submit_and_return_to_songlist" value="Submit and return to song list" />

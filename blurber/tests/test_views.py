@@ -238,6 +238,24 @@ class UploadSongTests(BlurberBaseViewTests):
         self.assertIsInstance(resp.context['form'], UploadSongForm)
         self.assertFalse(resp.context['song'])
 
+    def test_upload_song_with_missing_artist_raises_form_error(self):
+        r = self.client.force_login(self.editor)
+
+        resp = self.client.post(
+            reverse('upload_song'),
+            data={'artist': 'Roxy Music'}
+        )
+        self.assertFormError(resp, 'form', 'title', ['This field is required.'])
+
+    def test_upload_song_with_missing_artist_raises_form_error(self):
+        r = self.client.force_login(self.editor)
+
+        resp = self.client.post(
+            reverse('upload_song'),
+            data={'title': 'Love Is 1x Drug'}
+        )
+        self.assertFormError(resp, 'form', 'artist', ['This field is required.'])
+
     def test_submit_upload_song_form_and_continue_uploading_shows_new_form(self):
         r = self.client.force_login(self.editor)
 

@@ -87,8 +87,9 @@ def upload_song(request):
                 return redirect('weekly_schedule')
 
             # Else reset fresh form for next upload
-
-    form = UploadSongForm()
+            form = UploadSongForm()
+    else:
+        form = UploadSongForm()
 
     return render(
         request, 'upload_song.html', {'form': form, 'song': song}
@@ -151,7 +152,6 @@ TODO: output HTML for wordpress/tumblr
 Edit someone else's blurbs
 Look at all blurbs submitted by someone
 Change the score
-- Upload a song (in progress)
 - Edit song info (admin)
 - Schedule a day/remove the songs for a day (admin)
 Post an entry
