@@ -55,6 +55,8 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'jukebox.urls'
 
+LOGIN_URL = '/login/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
