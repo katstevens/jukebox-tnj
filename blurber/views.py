@@ -194,13 +194,13 @@ TODO:
 - Post an entry to WP & save retrieved ID
 - Configure email settings
 - send email to admin on deleting a blurb
-- Contraversy index
+- Controversy index
 
 DONE (main)
 - Write and edit a blurb
 - View someone else's blurbs
 - Upload a song
-- output HTML for wordpress/tumblr
+- output HTML for wordpress/tumblr (needs tests)
 
 DONE (admin)
 - Edit song info

@@ -71,6 +71,18 @@ class Song(models.Model):
             return round(score_avg.get('score__avg', 0), 2)
         return 0
 
+    def controversy_index(self):
+        """
+        The basic formula is to take the difference between
+        each score and the average score, add those all up, and then take the
+        average of *that*. (The statistics name for this is "average deviation.")
+        Then Dave uses a multiplier of .02 for every additional voter over eight, so
+        if there are nine voters he multiplies by 1.02, if there are ten he
+        multiplies by 1.04, eleven by 1.06, and so on.
+        :return:
+        """
+        return 0
+
     def __str__(self):
         return "%s - %s" % (self.artist, self.title)
 
