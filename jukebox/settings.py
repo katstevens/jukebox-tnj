@@ -56,6 +56,7 @@ MIDDLEWARE_CLASSES = [
 ROOT_URLCONF = 'jukebox.urls'
 
 LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/schedule'
 
 TEMPLATES = [
     {

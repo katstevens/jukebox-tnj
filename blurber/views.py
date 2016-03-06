@@ -160,15 +160,28 @@ def move_review(request, review_id, direction="top"):
 
 
 """
-TODO: output HTML for wordpress/tumblr
-- wordpress link up/publish
-- admin groups (editor, site admin)
-- settings per post, turn on/off user ratings (admin)
-- deleting blurbs (email alert to admins)
-Edit someone else's blurbs
-Look at all blurbs submitted by someone
-Change the score
-- Edit song info (admin)
-- Schedule a day/remove the songs for a day (admin)
-Post an entry
+TODO:
+- migration for admin permissions (staff/superuser)
+- Look at all blurbs submitted by someone (done???)
+- Change the score (override field?)
+- Preview the WP entry
+- Change admin template to say 'jukebox' rather than Django
+- Post an entry to WP & save retrieved ID
+- output HTML for wordpress/tumblr
+- Configure email settings
+- send email to admin on deleting a blurb
+
+DONE (main)
+- Write and edit a blurb
+- View someone else's blurbs
+- Upload a song
+-
+
+DONE (admin)
+- Edit song info
+- Schedule a week
+- Hide songs for the day (check this!)
+- Edit someone else's blurbs
+- Change the settings for a post (Song) including user ratings on/off
+
 """
