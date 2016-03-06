@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -39,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'writers',
     'blurber',
+    'django.contrib.admin',     # Put this after 'writers' to use registration templates
 ]
 AUTH_USER_MODEL = 'writers.Writer'
 

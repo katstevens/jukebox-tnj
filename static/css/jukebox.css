@@ -163,7 +163,7 @@ background-color: #FFFFFF;}
 table td.pending {
 background-color: #EEEE00;}
 
-#myInstance1 {
+#myInstance1 {}
 
 nicEdit-panel {
 background-color: #fff;
@@ -176,4 +176,15 @@ background-color: #fff;
 
 .this-week a {
     font-weight:bold;
+}
+
+.error-text {
+    color: #EA0404;
+    font-size:small;
+}
+
+.error-text li, .error-text ul {
+    list-style: none;
+    margin:0;
+    padding:0;
 }
