@@ -165,7 +165,6 @@ TODO: output HTML for wordpress/tumblr
 - admin groups (editor, site admin)
 - settings per post, turn on/off user ratings (admin)
 - deleting blurbs (email alert to admins)
-- passwords etc
 Edit someone else's blurbs
 Look at all blurbs submitted by someone
 Change the score
