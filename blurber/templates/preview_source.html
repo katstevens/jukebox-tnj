@@ -1,0 +1,25 @@
+<font size=+1>{{ song.artist }} - {{ song.title }}</font>
+<p><em>{{ song.tagline }}</em></p>
+<center>
+    <img src="{{ song.image_url }}" border="2" />
+    <br />
+    <strong>{% if song.youtube_link %}[<a href="{{ song.youtube_link }}">Video</a>]{% endif %}
+        {% if song.web_link %}[<a href="{{ song.web_link }}">Website</a>]{% endif %}
+    <br><a title='Controversy index: TODO [TODO][TODO][TODO]'>[{{ song.average_score }}]</a>
+    </strong>
+</center>
+{% for r in reviews %}
+    <p><strong>{% if r.writer.bio_link %}
+        <a href="{{ r.writer.bio_link }}">{{ r.writer }}</a>:
+        {% else %}
+        {{ r.writer }}:
+        {% endif %}
+        </strong>
+        {{ r.blurb|safe }}<br />
+        [{{ r.score }}]
+        <br />
+        {% if show_admin_links %}
+        [<a href="{% url 'writer_blurbs' r.writer.id %}">All {{ r.writer }}'s blurbs</a>]
+        {% endif %}
+    </p>
+{% endfor %}

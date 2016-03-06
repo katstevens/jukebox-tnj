@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 from blurber.views import (
-    weekly_schedule, write_review, upload_song, view_reviews, move_review
+    weekly_schedule, write_review, upload_song, view_reviews, move_review, preview_post, fetch_html
 )
 
 urlpatterns = [
@@ -32,6 +32,8 @@ urlpatterns = [
     # Staff only views
     url(r'^song/upload', upload_song, name='upload_song'),
     url(r'^song/(?P<song_id>\d+)/reviews/$', view_reviews, name='view_reviews'),
+    url(r'^song/(?P<song_id>\d+)/preview/$', preview_post, name='preview_post'),
+    url(r'^song/(?P<song_id>\d+)/source/$', fetch_html, name='fetch_html'),
     url(r'^review/(?P<review_id>\d+)/moveup/$', move_review, {'direction': 'up'}, name='move_review_up'),
     url(r'^review/(?P<review_id>\d+)/movedown/$', move_review, {'direction': 'down'}, name='move_review_down'),
     url(r'^review/(?P<review_id>\d+)/movetop/$', move_review, {'direction': 'top'}, name='move_review_top'),

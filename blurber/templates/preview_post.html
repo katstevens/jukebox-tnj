@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block page_title %}Preview{% endblock %}
+
+{% block content %}
+	{% include 'preview_source.html' %}
+	<div class="top-border">
+		<p><a href="{% url 'view_reviews' song.id %}">Re-order these blurbs &raquo;</a></p>
+		<p><a href="{% url 'fetch_html' song.id %}">Get HTML for some copyin' and pastin' &raquo;</a></p>
+	</div>
+	<br />
+{% endblock %}

@@ -1,7 +1,9 @@
 from datetime import datetime
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.html import escape
 
 from blurber.models import Song, ScheduledWeek, Review
 from blurber.forms import ReviewForm, UploadSongForm
@@ -159,6 +161,29 @@ def move_review(request, review_id, direction="top"):
     return redirect('view_reviews', review.song.id)
 
 
+@staff_member_required(login_url="login")
+def preview_post(request, song_id):
+    # Display a nice preview with usual header, links etc
+    song = get_object_or_404(Song, id=song_id)
+    reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
+
+    return render(request, 'preview_post.html', {
+        'reviews': reviews, 'song': song, 'show_admin_links': True}
+    )
+
+
+@staff_member_required(login_url="login")
+def fetch_html(request, song_id, show_admin_links=False):
+    # Display raw HTML ready for C&P
+    song = get_object_or_404(Song, id=song_id)
+    reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
+
+    resp = render(request, 'preview_source.html', {
+        'reviews': reviews, 'song': song, 'show_admin_links': show_admin_links}
+    )
+    html_data = escape(resp.content)
+    return HttpResponse(html_data)
+
 """
 TODO:
 - migration for admin permissions (staff/superuser)
@@ -167,15 +192,15 @@ TODO:
 - Preview the WP entry
 - Change admin template to say 'jukebox' rather than Django
 - Post an entry to WP & save retrieved ID
-- output HTML for wordpress/tumblr
 - Configure email settings
 - send email to admin on deleting a blurb
+- Contraversy index
 
 DONE (main)
 - Write and edit a blurb
 - View someone else's blurbs
 - Upload a song
--
+- output HTML for wordpress/tumblr
 
 DONE (admin)
 - Edit song info
