@@ -88,6 +88,9 @@ class Song(models.Model):
 
     class Meta:
         ordering = ['-upload_date']
+        permissions = (
+            ("can_edit_overall_score", "Editor can edit overall score"),
+        )
 
 
 class Review(models.Model):
@@ -108,6 +111,9 @@ class Review(models.Model):
 
     class Meta:
         ordering = ['-create_date']
+        permissions = (
+            ("can_edit_blurb", "Editor can edit blurb"),
+        )
 
 
 class ScheduledWeek(models.Model):
