@@ -8,29 +8,30 @@
 		<br />
 		<strong>{{ song.title }} by {{ song.artist }}</strong>
 		<p>{{ review_count }} review(s)</p>
-		{% if success %}
-		<p><em>Sort order updated.</em></p>
-		{% endif %}
 	</div>
 	<div>
 		<table>
-			<tr><td>Review</td><td>Order</td></tr>
+			<tr><td>Order</td><td>Review</td></tr>
 
 			{% for r in reviews %}
 				<tr>
+					<td>
+					{{ r.sort_order }}
+					</td>
 					<td>
 						<p>{{ r.writer }}</p>
 						{{ r.blurb|safe }}
 						<strong>[{{ r.score }}]</strong>
 					</td>
 					<td>
-					{{ r.sort_order }}
-					</td>
-					<td>
+						{% if r.sort_order > 1 %}
 						<a href="{% url 'move_review_top' r.id %}">Move to top</a><br />
 						<a href="{% url 'move_review_up' r.id %}">Move up</a><br />
+						{% endif %}
+						{% if r.sort_order < review_count %}
 						<a href="{% url 'move_review_down' r.id %}">Move down</a><br />
 						<a href="{% url 'move_review_bottom' r.id %}">Move to bottom</a>
+						{% endif %}
 					</td>
 				</tr>
 			{% endfor %}

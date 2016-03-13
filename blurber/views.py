@@ -101,7 +101,6 @@ def upload_song(request):
 @staff_member_required(login_url="login")
 def view_reviews(request, song_id):
     # View all reviews for a song and change ordering
-    success = False
     song = get_object_or_404(Song, id=song_id)
     reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
 
@@ -111,8 +110,7 @@ def view_reviews(request, song_id):
         {
             'reviews': reviews,
             'song': song,
-            'review_count': reviews.count(),
-            'success': True
+            'review_count': reviews.count()
         }
     )
 
@@ -185,8 +183,9 @@ def fetch_html(request, song_id, show_admin_links=False):
     return HttpResponse(html_data)
 
 """
+IN PROGRESS
+
 TODO:
-- migration for admin permissions (staff/superuser)
 - Look at all blurbs submitted by someone (done???)
 - Change the score (override field?)
 - Preview the WP entry
@@ -195,12 +194,14 @@ TODO:
 - Configure email settings
 - send email to admin on deleting a blurb
 - Controversy index
+- error pages 404 etc
 
 DONE (main)
 - Write and edit a blurb
 - View someone else's blurbs
 - Upload a song
 - output HTML for wordpress/tumblr (needs tests)
+- migration for admin permissions (staff/superuser)
 
 DONE (admin)
 - Edit song info
