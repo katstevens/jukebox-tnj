@@ -81,7 +81,23 @@ class Song(models.Model):
         multiplies by 1.04, eleven by 1.06, and so on.
         :return:
         """
-        return 0
+        avg_score = self.average_score()
+        review_count = self.blurb_count
+
+        running_deviation = 0
+        for bl in self.saved_reviews():
+            running_deviation += abs(avg_score - bl.score)
+        avg_deviation = running_deviation / review_count
+
+        return self.multiplier * avg_deviation
+
+    @property
+    def multiplier(self):
+        if self.blurb_count < 9:
+            extra_weighting = 0
+        else:
+            extra_weighting = (self.blurb_count-8)*0.02
+        return 1 + extra_weighting
 
     def __str__(self):
         return "%s - %s" % (self.artist, self.title)
