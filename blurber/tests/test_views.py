@@ -320,7 +320,7 @@ class ViewReviewsTest(BlurberBaseViewTests):
         url = reverse('view_reviews', kwargs={'song_id': self.song.id })
         self.assert_view_hidden_for_writer(url)
 
-    def test_upload_song_form_displays_for_editor(self):
+    def test_review_list_displays_for_editor(self):
         r = self.client.force_login(self.editor)
         url = reverse('view_reviews', kwargs={'song_id': self.song.id })
         resp = self.client.get(url)
@@ -425,3 +425,36 @@ class ViewReviewsTest(BlurberBaseViewTests):
 
         # Should be 3/4 in queryset
         self.assert_review_moved_to_position(url, 2)
+
+
+class PreviewPostTests(BlurberBaseViewTests):
+
+    def test_preview_post_hidden_for_writer(self):
+        url = reverse('preview_post', kwargs={'song_id': self.song.id })
+        self.assert_view_hidden_for_writer(url)
+
+    def test_preview_post_displays_for_editor(self):
+        r = self.client.force_login(self.editor)
+        url = reverse('preview_post', kwargs={'song_id': self.song.id })
+        resp = self.client.get(url)
+
+        self.assertTemplateUsed(resp, 'preview_post.html')
+        self.assertQuerysetEqual(resp.context['reviews'], ['<Review: 2NE1 - I Am The Best: MW>'])
+        self.assertEqual(resp.context['song'], self.song)
+        self.assertTrue(resp.context['show_admin_links'])
+        self.assertContains(resp, "Preview")
+
+    def test_fetch_html_hidden_for_writer(self):
+        url = reverse('fetch_html', kwargs={'song_id': self.song.id })
+        self.assert_view_hidden_for_writer(url)
+
+    def test_fetch_html_displays_for_editor(self):
+        r = self.client.force_login(self.editor)
+        url = reverse('fetch_html', kwargs={'song_id': self.song.id })
+        resp = self.client.get(url)
+
+        self.assertTemplateUsed(resp, 'preview_source.html')
+        self.assertQuerysetEqual(resp.context['reviews'], ['<Review: 2NE1 - I Am The Best: MW>'])
+        self.assertEqual(resp.context['song'], self.song)
+        self.assertFalse(resp.context['show_admin_links'])
+        self.assertNotContains(resp, "Preview")

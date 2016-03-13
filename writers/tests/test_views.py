@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -34,7 +35,7 @@ class WriterBaseViewTests(TestCase):
             blurb='BrillSkillz',
             status='published',
         )
-        self.published_review.create_date = datetime(2015, 2, 2)
+        self.published_review.create_date = datetime(2015, 2, 2, tzinfo=timezone.utc)
         self.published_review.save()
 
         self.saved_review = Review.objects.create(
@@ -42,14 +43,13 @@ class WriterBaseViewTests(TestCase):
             writer=self.writer,
             score=10,
             blurb='BrillBuildingSkillz',
-            status='saved',
-            create_date=datetime(2015,3,3)
+            status='saved'
         )
-        self.saved_review.create_date = datetime(2015, 3, 3)
+        self.saved_review.create_date = datetime(2015, 3, 3, tzinfo=timezone.utc)
         self.saved_review.save()
 
         self.week = ScheduledWeek.objects.create(
-            week_beginning=datetime(2015,1,1),
+            week_beginning=datetime(2015,1,1, tzinfo=timezone.utc),
             week_info='Let us get this party started.'
         )
         self.week.monday.add(self.song1)
