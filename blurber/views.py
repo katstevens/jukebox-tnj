@@ -189,12 +189,10 @@ TODO:
 - Look at all blurbs submitted by someone (done???)
 - Change the score (override field?)
 - Preview the WP entry
-- Change admin template to say 'jukebox' rather than Django
 - Post an entry to WP & save retrieved ID
 - Configure email settings
 - send email to admin on deleting a blurb
 - Controversy index (needs tests, preview version)
-- error pages 404 etc
 
 DONE (main)
 - Write and edit a blurb
