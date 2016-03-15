@@ -18,12 +18,18 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 
+from django.views.generic.base import TemplateView
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^myblurbs/', include('writers.urls')),
     url(r'', include('blurber.urls')),
-    url(r'', include('django.contrib.auth.urls'))
+    url(r'', include('django.contrib.auth.urls')),
+
+    url(r'^404testing/$', TemplateView.as_view(template_name='404.html')),
+    url(r'^500testing/$', TemplateView.as_view(template_name='500.html'))
+
 ]
 
 if settings.DEBUG:
