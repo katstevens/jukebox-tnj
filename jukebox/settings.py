@@ -129,3 +129,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+# Email
+EMAIL_ADMINS = ['kat.stevens@gmail.com']
+EMAIL_FROM_ADDRESS = "Princess Superstar <kat.stevens@gmail.com>"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

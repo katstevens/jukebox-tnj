@@ -1,5 +1,20 @@
+from django.conf import settings
 from django.contrib import admin
+from django.core.mail import send_mail
 from blurber.models import Review, Song, ScheduledWeek
+
+
+def send_email_if_blurb_removed(obj, user):
+    subject = "Blurb removed: %s" % obj
+    message = "The following blurb has been removed from the TSJ 2.0 admin " \
+              "by user %s:\n\n%s\n\n" % (user, obj)
+    result = send_mail(
+        subject=subject,
+        message=message,
+        from_email=settings.EMAIL_FROM_ADDRESS,
+        recipient_list=settings.EMAIL_ADMINS
+    )
+    return result
 
 
 class SongAdmin(admin.ModelAdmin):
@@ -17,6 +32,11 @@ class ReviewAdmin(admin.ModelAdmin):
     ordering = ['song__artist', 'song__title', 'sort_order']
     search_fields = ['song__artist', 'song__title', 'writer__username', 'writer__first_name', 'writer__last_name']
 
+    def save_model(self, request, obj, form, change):
+        if change and 'status' in form.changed_data:
+            if form.cleaned_data['status'] == "removed":
+                sent = send_email_if_blurb_removed(obj, request.user)
+        obj.save()
 
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Song, SongAdmin)

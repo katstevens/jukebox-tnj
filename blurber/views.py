@@ -189,8 +189,6 @@ TODO:
 - Change the score (override field?)
 - Preview the WP entry
 - Post an entry to WP & save retrieved ID
-- Configure email settings
-- send email to admin on deleting a blurb
 - Controversy index (needs tests, preview version)
 
 DONE (main)
@@ -207,5 +205,5 @@ DONE (admin)
 - Hide songs for the day (check this!)
 - Edit someone else's blurbs
 - Change the settings for a post (Song) including user ratings on/off
-
+- send email to admin on deleting a blurb
 """
