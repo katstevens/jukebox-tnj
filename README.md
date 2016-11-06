@@ -15,3 +15,18 @@ To run locally:
     - create an admin account with `./manage.py create_superuser` (follow the prompts).
     - run `./manage.py runserver` to start the server
 - Now go to http://127.0.0.1:8000/schedule, log in as the superuser and behold the wonder of Jukebox TNJ.
+
+To run with MySQL:
+- Create database and user in MySQL
+- Change settings-prod.py DATABASE OPTIONS to point to the MySQL config file
+- In the config file, include
+
+    [client]
+    database = NAME
+    user = USER
+    password = PASSWORD
+    default-character-set = utf8
+
+To create backups:
+- Run `./manage.py dumpdata --output /path/to/dumps`
+- TODO: configure and save backups to an S3 bucket
