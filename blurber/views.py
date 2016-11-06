@@ -248,30 +248,3 @@ def publish_song_to_wordpress(request, song_id):
     song.save()
 
     return HttpResponse("Song posted successfully - Wordpress ID %s" % post_id)
-
-"""
-IN PROGRESS
-- Post an entry to WP & save retrieved ID
-
-TODO:
-- Change the score (override field?)
-- Deployment script
-
-DONE (main)
-- Write and edit a blurb
-- View someone else's blurbs
-- Upload a song
-- output HTML for wordpress/tumblr
-- migration for admin permissions (staff/superuser)
-- Look at all blurbs submitted by someone
-- Preview the WP entry
-- Controversy index (tests, preview display)
-
-DONE (admin)
-- Edit song info
-- Schedule a week
-- Hide songs for the day (check this!)
-- Edit someone else's blurbs
-- Change the settings for a post (Song) including user ratings on/off
-- send email to admin on deleting a blurb
-"""
