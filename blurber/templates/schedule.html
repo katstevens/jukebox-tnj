@@ -33,6 +33,9 @@
 	<table>
 	{% for song in all_open_songs %}
 		<tr class="{{ song.css_class }}">
+			{% if request.user.is_staff %}
+			<td><a href="{% url 'admin:blurber_song_change' song.id %}">{{ song.id }}</a></td>
+			{% endif %}
 			<td><strong>{{ song.artist }}</strong> - {{ song.title }}</td>
 			<td><a href="{{ song.mp3_link }}">MP3</a></td>
 			<td><a href="{{ song.youtube_link }}">Video</a></td>

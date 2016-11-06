@@ -39,6 +39,7 @@
 	</div>
 	<div>
 		<p><a href="{% url 'preview_post' song.id %}">Preview this post &raquo;</a></p>
+		<p><a href="{% url 'admin:blurber_song_change' song.id %}">Edit song details (close song here) &raquo;</a></p>
 	</div>
 	<br />
 {% endblock %}

@@ -107,6 +107,9 @@ class ScheduleViewTests(BlurberBaseViewTests):
 
         # Should only be visible for staff
         self.assertContains(resp, 'Review all blurbs')
+        self.assertContains(
+            resp, reverse('admin:blurber_song_change', args=[self.song.id])
+        )
 
 
 class WriteReviewViewTests(BlurberBaseViewTests):
@@ -331,6 +334,9 @@ class ViewReviewsTest(BlurberBaseViewTests):
         self.assertQuerysetEqual(resp.context['reviews'], ['<Review: 2NE1 - I Am The Best: MW>'])
         self.assertEqual(resp.context['song'], self.song)
         self.assertEqual(resp.context['review_count'], 1)
+        self.assertContains(
+            resp, reverse('admin:blurber_song_change', args=[self.song.id])
+        )
 
     def assert_review_moved_to_position(self, url, expected_position):
 
@@ -446,6 +452,9 @@ class PreviewPostTests(BlurberBaseViewTests):
         self.assertTrue(resp.context['show_admin_links'])
         self.assertContains(resp, "Preview")
         self.assertContains(resp, self.song.controversy_debug_string())
+        self.assertContains(
+            resp, reverse('admin:blurber_song_change', args=[self.song.id])
+        )
 
     def test_fetch_html_hidden_for_writer(self):
         url = reverse('fetch_html', kwargs={'song_id': self.song.id })

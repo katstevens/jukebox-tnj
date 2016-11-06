@@ -5,9 +5,10 @@
 
 {% block content %}
 	{% include 'preview_source.html' %}
-	<div class="top-border">
+	<div class="top-border" style="border-top:1px solid #999;">
 		<p><a href="{% url 'view_reviews' song.id %}">Re-order these blurbs &raquo;</a></p>
 		<p><a href="{% url 'fetch_html' song.id %}">Get HTML for some copyin' and pastin' &raquo;</a></p>
+		<p><a href="{% url 'admin:blurber_song_change' song.id %}">Edit song details (close song here) &raquo;</a></p>
 	</div>
 	<br />
 {% endblock %}
