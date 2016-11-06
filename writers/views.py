@@ -44,6 +44,28 @@ def my_blurbs(request, status=None, year=None):
 
 
 @staff_member_required(login_url='login')
+def all_writers(request, order='recent'):
+    if order == 'name':
+        writers = Writer.objects.all().order_by('last_name')
+        order_text = 'By Name'
+    else:
+        # Default view: who's written most recently
+        ws = Writer.objects.all()
+        writers = sorted(ws, key=lambda x: x.last_blurb_date())
+        order_text = 'By Most Recent Blurb'
+
+    return render(
+        request,
+        'all_writers.html',
+        {
+            'writers': writers,
+            'editor_view': True,
+            'order_text': order_text
+        }
+    )
+
+
+@staff_member_required(login_url='login')
 def writer_blurbs(request, writer_id, status=None, year=None):
     # An editor can view all the blurbs for a writer
     # with links to edit it in the admin...

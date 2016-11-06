@@ -10,11 +10,13 @@ def create_editor_group(apps, schema_editor):
     editor_group = Group.objects.get_or_create(name="tsj_editors")
 
     # Permissions created in blurber 0005
-    can_change_blurb = Permission.objects.get(codename="can_edit_blurb")
-    can_change_overall_score = Permission.objects.get(codename="can_edit_overall_score")
-    editor_group.add(can_change_blurb)
-    editor_group.add(can_change_overall_score)
-
+    try:
+        can_change_blurb = Permission.objects.get(codename="can_edit_blurb")
+        can_change_overall_score = Permission.objects.get(codename="can_edit_overall_score")
+        editor_group.add(can_change_blurb)
+        editor_group.add(can_change_overall_score)
+    except:
+        pass
 
 def remove_editor_group(apps, schema_editor):
     Group = apps.get_model()

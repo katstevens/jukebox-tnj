@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load tz %}
+{% load staticfiles %}
+
+{% block page_title %}Writers ({{ order_text }}){% endblock %}
+
+{% block content %}
+	{% if editor_view %}
+		<div><p>Click the writer's name to view the list of their blurbs.</p></div>
+	{% endif %}
+
+	<table>
+		<th>Writer</th><th>Last Blurb (London time)</th>
+		{% for writer in writers %}
+			<tr>
+				<td>
+					<a href="{% url 'writer_blurbs' writer.id %}">{{ writer.get_full_name }}</a><br />
+				</td>
+				<td>
+					{{ writer.last_blurb_date|timezone:"Europe/London"|date:"D d M Y" }}
+					{{ writer.last_blurb_date|timezone:"Europe/London"|time:"H:i" }}
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+
+{% endblock %}

@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin
 from django.utils import timezone
@@ -31,6 +33,17 @@ class Writer(AbstractBaseUser, PermissionsMixin):
 
     def initials(self):
         return self.first_name[0] + self.last_name[0]
+
+    def blurb_history(self):
+        return self.review_set.all().order_by('-create_date')
+
+    def last_blurb_date(self):
+        # Return the date of their most recent blurb
+        blurbs = self.blurb_history()
+        if blurbs:
+            return blurbs[0].create_date
+        # No blurbs - return an old date
+        return datetime(1970, 1, 1, tzinfo=timezone.utc)
 
     def published_blurb_history(self):
 

@@ -144,6 +144,23 @@ class WriterViewTests(WriterBaseViewTests):
         )
         self.assertTrue(resp.context['editor_view'])
 
+    def test_writer_list_hidden_for_writer(self):
+        self.assert_view_hidden_for_writer(reverse('all_writers'))
+
+    def test_writer_list_visible_for_editor(self):
+        r = self.client.force_login(self.editor)
+        resp = self.client.get(
+            reverse('all_writers')
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed('all_writers.html')
+
+        self.assertEqual(
+            set([self.writer, self.editor]),
+            set(resp.context['writers'])
+        )
+        self.assertTrue(resp.context['editor_view'])
+
 
 class RegistrationTests(WriterBaseViewTests):
 

@@ -23,7 +23,7 @@
 			<a href="{% url 'my_blurbs' %}">[My blurbs]</a>
 			{% if request.user.is_staff %}
 				<a href="{% url 'upload_song' %}">[New song]</a>
-				<a href="">[Userlist]</a>
+				<a href="{% url 'all_writers' %}">[Userlist]</a>
 				<a href="{% url 'admin:blurber_review_changelist' %}">[Review log]</a>
 			{% endif %}
 			<a href="http://furanes.net/blurbs/sitefaq.html">[Site FAQ]</a>
