@@ -8,7 +8,8 @@ Current specs:
 
 To run locally:
 - Checkout the repo.
-- Install the versions of Python and Django above (SQLite comes as the default with Django 1.9)
+- Create a Python3 venv if desired.
+- Install requirements.txt (SQLite comes with Django)
 - In the project root directory (the same folder as `manage.py`:
     - run `./manage.py migrate` to create the SQLite DB.
     - run `./manage.py collectstatic` to build the CSS/JS files.

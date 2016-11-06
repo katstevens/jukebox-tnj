@@ -189,7 +189,7 @@ TODO:
 - Change the score (override field?)
 - Preview the WP entry
 - Post an entry to WP & save retrieved ID
-- Controversy index (needs tests, preview version)
+- Deployment script
 
 DONE (main)
 - Write and edit a blurb
@@ -198,6 +198,7 @@ DONE (main)
 - output HTML for wordpress/tumblr
 - migration for admin permissions (staff/superuser)
 - Look at all blurbs submitted by someone
+- Controversy index (tests, preview display)
 
 DONE (admin)
 - Edit song info
