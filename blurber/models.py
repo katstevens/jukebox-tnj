@@ -79,10 +79,12 @@ class Song(models.Model):
         Then Dave uses a multiplier of .02 for every additional voter over eight, so
         if there are nine voters he multiplies by 1.02, if there are ten he
         multiplies by 1.04, eleven by 1.06, and so on.
-        :return:
         """
         avg_score = self.average_score()
         review_count = self.blurb_count
+        # Return zero for a song with no reviews.
+        if review_count < 1:
+            return 0
 
         running_deviation = 0
         for bl in self.saved_reviews():

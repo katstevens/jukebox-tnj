@@ -5,7 +5,7 @@ from writers.models import Writer
 from blurber.models import Song, Review, ScheduledWeek
 
 
-class SongTests(TestCase):
+class SongTestBase(TestCase):
 
     def setUp(self):
         self.song = Song.objects.create(
@@ -38,6 +38,23 @@ class SongTests(TestCase):
             blurb='Crowd say bo selecta'
         )
 
+    def generate_additional_review(self, song, i, score=None):
+        if not score:
+            score = i
+        w = Writer.objects.create(
+            username=i, email=i, first_name=i, last_name=i
+        )
+        next_review = Review(
+            song=song,
+            writer=w,
+            blurb="blurb %s" % i,
+            score=score,
+            status='saved'
+        )
+        next_review.save()
+
+
+class SongTests(SongTestBase):
     def test_saved_reviews(self):
 
         self.assertQuerysetEqual(
@@ -48,19 +65,6 @@ class SongTests(TestCase):
     def test_blurb_count(self):
 
         self.assertEqual(self.song.blurb_count, 1)
-
-    def generate_additional_review(self, song, i):
-        w = Writer.objects.create(
-            username=i, email=i, first_name=i, last_name=i
-        )
-        next_review = Review(
-            song=song,
-            writer=w,
-            blurb="blurb %s" % i,
-            score=i,
-            status='saved'
-        )
-        next_review.save()
 
     def test_css_class_for_blurb_ranges(self):
 
@@ -115,6 +119,68 @@ class SongTests(TestCase):
         self.generate_additional_review(self.new_song, 9)
 
         self.assertEqual(self.new_song.average_score(), 5.67)
+
+
+class ControversyIndexTests(SongTestBase):
+
+    def test_multiplier_for_8_reviews_is_exactly_1(self):
+        for i in range(7):
+            self.generate_additional_review(self.song, i)
+
+        self.assertEqual(self.song.multiplier, 1)
+
+    def test_multiplier_for_over_9_reviews_increases(self):
+        """
+        Use a multiplier of .02 for every additional voter over eight, so
+        if there are nine voters, multiply by 1.02, if there are ten,
+        multiply by 1.04, eleven by 1.06, and so on.
+        """
+        mult = 1
+        for i in range(7):
+            self.generate_additional_review(self.song, i)
+            self.assertEqual(self.song.multiplier, mult)
+
+        for i in range(3):
+            self.generate_additional_review(self.song, i+7)
+            mult += 0.02
+            self.assertEqual(self.song.multiplier, mult)
+
+    def test_controversy_index_for_8_songs(self):
+        """
+        # Scores of 0, 1, 2, 3, 4, 5, 5, 6
+        # Average score is 3.25
+        # Total deviation: 3.25+2.25+1.25+0.25+0.75+1.75+1.75+2.75 = 14
+        # Average deviation 14/8 = 1.75
+        """
+        for i in range(7):
+            self.generate_additional_review(self.song, i)
+
+        self.assertEqual(self.song.blurb_count, 8)
+        self.assertEqual(self.song.average_score(), 3.25)
+        self.assertEqual(
+            self.song.controversy_index(), 1.75
+        )
+
+    def test_controversy_index_for_0_reviews_is_0(self):
+        song = Song.objects.create(
+            artist='Gang of Four',
+            title='What We All Want',
+            status='published'
+        )
+        self.assertEqual(song.blurb_count, 0)
+        self.assertEqual(song.controversy_index(), 0)
+
+    def test_controversy_index_for_equal_scoring_reviews_is_0(self):
+        song = Song.objects.create(
+            artist='Gang of Four',
+            title='I Love A Man In Uniform',
+            status='published'
+        )
+        for i in range(5):
+            self.generate_additional_review(song, i, score=3)
+
+        self.assertEqual(song.blurb_count, 5)
+        self.assertEqual(song.controversy_index(), 0)
 
 
 class ScheduledWeekTests(TestCase):
