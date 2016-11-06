@@ -10,5 +10,11 @@
 		<p><a href="{% url 'fetch_html' song.id %}">Get HTML for some copyin' and pastin' &raquo;</a></p>
 		<p><a href="{% url 'admin:blurber_song_change' song.id %}">Edit song details (close song here) &raquo;</a></p>
 	</div>
-	<br />
+	{% if song.status == "closed" %}
+	<div class="top-border" style="border-top:1px solid #999;">
+		<p><b>Closed songs only</b></p>
+		<p><a href="{% url 'publish_song_to_wordpress' song.id %}">Publish on Wordpress (YES CLICKING THIS LINK WILL REALLY DO IT) &raquo;</a></p>
+	</div>
+	{% endif %}
+<br />
 {% endblock %}
