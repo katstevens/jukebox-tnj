@@ -1,3 +1,5 @@
+from unittest.mock import patch, call, Mock
+
 from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -460,3 +462,30 @@ class PreviewPostTests(BlurberBaseViewTests):
         self.assertFalse(resp.context['show_admin_links'])
         self.assertNotContains(resp, "Preview")
         self.assertNotContains(resp, self.song.controversy_debug_string())
+
+
+class PublishPostTests(BlurberBaseViewTests):
+
+    @patch('blurber.views._song_html_content')
+    @patch('blurber.views._create_wp_post')
+    @patch('blurber.views._post_to_wp')
+    def test_publish_post_calls_rpc_client(self, myclient, mypost, mycontent):
+        myclient.return_value = "TESTID"
+        mycontent.return_value = Mock(content="<h1>Testing</h1>")
+
+        r = self.client.force_login(self.editor)
+        url = reverse('publish_song_to_wordpress', kwargs={'song_id': self.song.id})
+        resp = self.client.get(url)
+
+        # The mocked functions should be called correctly
+        self.assertEqual(
+            mypost.call_args, call(self.song, "&lt;h1&gt;Testing&lt;/h1&gt;")
+        )
+        self.assertEqual(
+            myclient.call_args, call(mypost.return_value)
+        )
+        # The view should give a success message
+        self.assertEqual(resp.content, b"Song posted successfully - Wordpress ID TESTID")
+        # The wordpress ID should be saved
+        updated_song = Song.objects.get(id=self.song.id)
+        self.assertEqual(updated_song.wordpress_post_id, 'TESTID')

@@ -1,9 +1,15 @@
 from datetime import datetime
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.html import escape
+from django.utils import timezone
+
+from wordpress_xmlrpc import Client, WordPressPost
+from wordpress_xmlrpc.exceptions import ServerConnectionError
+from wordpress_xmlrpc.methods.posts import NewPost
 
 from blurber.models import Song, ScheduledWeek, Review
 from blurber.forms import ReviewForm, UploadSongForm
@@ -159,36 +165,96 @@ def move_review(request, review_id, direction="top"):
     return redirect('view_reviews', review.song.id)
 
 
+def _song_html_content(request, song_id, template='preview_source.html', show_admin_links=False):
+    # Churn out HTML
+    song = get_object_or_404(Song, id=song_id)
+    reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
+    return render(request, template, {
+        'reviews': reviews, 'song': song, 'show_admin_links': show_admin_links}
+    )
+
+
 @staff_member_required(login_url="login")
 def preview_post(request, song_id):
     # Display a nice preview with usual header, links etc
-    song = get_object_or_404(Song, id=song_id)
-    reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
-
-    return render(request, 'preview_post.html', {
-        'reviews': reviews, 'song': song, 'show_admin_links': True}
-    )
+    return _song_html_content(request, song_id, template='preview_post.html', show_admin_links=True)
 
 
 @staff_member_required(login_url="login")
 def fetch_html(request, song_id, show_admin_links=False):
     # Display raw HTML ready for C&P
-    song = get_object_or_404(Song, id=song_id)
-    reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
-
-    resp = render(request, 'preview_source.html', {
-        'reviews': reviews, 'song': song, 'show_admin_links': show_admin_links}
-    )
+    resp = _song_html_content(request, song_id, show_admin_links=show_admin_links)
     html_data = escape(resp.content)
     return HttpResponse(html_data)
 
+
+def _create_wp_post(song, content):
+    # Create the NewPost object - see docs at
+    # http://python-wordpress-xmlrpc.readthedocs.io/en/latest/ref/wordpress.html
+    # We're missing some fields but ehhhh who knows if they even exist anymore
+    post = WordPressPost()
+    post.title = str(song)
+    post.content = content
+    post.comment_status = 'open'
+    post.ping_status = 'closed'
+    post.post_status = 'publish'
+    post.post_type = 'post'
+    post.excerpt = song.tagline
+    post.date = datetime.now(tz=timezone.utc)
+    post.date_modified = datetime.now(tz=timezone.utc)
+
+    return NewPost(post)
+
+def _post_to_wp(post):
+    # Keep 3rd party calls separate
+    client = Client(
+        url=settings.XML_RPC_URL,
+        username=settings.XML_RPC_USERNAME,
+        password=settings.XML_RPC_PW
+    )
+    return client.call(post)
+
+
+@staff_member_required(login_url="login")
+def publish_song_to_wordpress(request, song_id):
+    """
+    ### Raw SQL up in the house (what used to happen)
+
+    INSERT INTO wp_posts
+        (id, post_author, post_date, post_date_gmt, post_content, post_title,
+        post_category, post_excerpt, post_status, comment_status, ping_status,
+        post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt,
+        post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count)
+    VALUES
+        (Default, $post_author, '$postdate', '$postdate', '$actualpost', '$posttitle',
+        Default, '$tagline', '$poststatus', 'open', 'closed',
+        Default, '$postname', '', '', '$currenttime', '$currenttime',
+        '', 0, Default, 0, 'post', '', 0 )
+
+    """
+    # Get the content
+    song = get_object_or_404(Song, id=song_id)
+    resp = _song_html_content(request, song_id, show_admin_links=False)
+    html_data = escape(resp.content)
+
+    # Build the post
+    post = _create_wp_post(song, html_data)
+
+    # Send it on its merry way
+    post_id = _post_to_wp(post)
+
+    # Update blurber
+    song.wordpress_post_id = post_id
+    song.save()
+
+    return HttpResponse("Song posted successfully - Wordpress ID %s" % post_id)
+
 """
 IN PROGRESS
+- Post an entry to WP & save retrieved ID
 
 TODO:
 - Change the score (override field?)
-- Preview the WP entry
-- Post an entry to WP & save retrieved ID
 - Deployment script
 
 DONE (main)
@@ -198,6 +264,7 @@ DONE (main)
 - output HTML for wordpress/tumblr
 - migration for admin permissions (staff/superuser)
 - Look at all blurbs submitted by someone
+- Preview the WP entry
 - Controversy index (tests, preview display)
 
 DONE (admin)
