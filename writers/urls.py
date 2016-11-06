@@ -11,6 +11,7 @@ urlpatterns = [
 
     # Editors only
     url(r'^writers$', all_writers, name='all_writers'),
+    url(r'^writers/sort/name/$', all_writers, {'order': 'name'}, name='all_writers_alphabetical'),
     url(r'^writer/(?P<writer_id>\d+)/$', writer_blurbs, name='writer_blurbs'),
     url(r'^writer/(?P<writer_id>\d+)/(?P<status>\w+)/$', writer_blurbs, name='writer_blurbs_by_status'),
     url(r'^writer/(?P<writer_id>\d+)/(?P<year>\d+)/$', writer_blurbs, name='writer_blurbs_by_year'),

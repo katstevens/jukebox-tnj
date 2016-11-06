@@ -56,3 +56,10 @@ class WriterTests(TestCase):
     def test_get_short_name(self):
 
         self.assertEqual(self.writer.get_short_name(), "Kelly Rowland")
+
+    def test_blurb_history_is_sorted_most_recent_first(self):
+        self.assertQuerysetEqual(
+            self.writer.blurb_history(),
+            ['<Review: Kendrick Lemar - Swimming Pools (Drank): KR>',
+             '<Review: Kendrick Lemar - King Kunta: KR>']
+        )

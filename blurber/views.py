@@ -186,7 +186,6 @@ def fetch_html(request, song_id, show_admin_links=False):
 IN PROGRESS
 
 TODO:
-- Look at all blurbs submitted by someone (done???)
 - Change the score (override field?)
 - Preview the WP entry
 - Post an entry to WP & save retrieved ID
@@ -200,6 +199,7 @@ DONE (main)
 - Upload a song
 - output HTML for wordpress/tumblr
 - migration for admin permissions (staff/superuser)
+- Look at all blurbs submitted by someone
 
 DONE (admin)
 - Edit song info

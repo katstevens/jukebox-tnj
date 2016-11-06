@@ -9,6 +9,14 @@
 		<div><p>Click the writer's name to view the list of their blurbs.</p></div>
 	{% endif %}
 
+	<div>
+		{% if order_text == "By Name" %}
+			[<a href="{% url 'all_writers' %}">Sort by most recently blurbed</a>]
+		{% else %}
+			[<a href="{% url 'all_writers_alphabetical' %}">Sort alphabetically</a>]
+		{% endif %}
+	</div>
+
 	<table>
 		<th>Writer</th><th>Last Blurb (London time)</th>
 		{% for writer in writers %}
