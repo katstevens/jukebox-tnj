@@ -6,7 +6,7 @@
     <strong>{% if song.youtube_link %}[<a href="{{ song.youtube_link }}">Video</a>]{% endif %}
         {% if song.web_link %}[<a href="{{ song.web_link }}">Website</a>]{% endif %}
     <br><a title='Controversy index:{{ song.controversy_index|floatformat:"2" }}
-    [{{ song.controversy_index }}][{{ song.multiplier }}][{{ song.blurb_count }}]'>[{{ song.average_score }}]</a>
+    {% if show_admin_links %}{{ song.controversy_debug_string }}{% endif %}'>[{{ song.average_score }}]</a>
     </strong>
 </center>
 {% for r in reviews %}

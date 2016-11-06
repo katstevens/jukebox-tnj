@@ -182,6 +182,20 @@ class ControversyIndexTests(SongTestBase):
         self.assertEqual(song.blurb_count, 5)
         self.assertEqual(song.controversy_index(), 0)
 
+    def test_controversy_debug_string(self):
+        song = Song.objects.create(
+            artist='Gang of Four',
+            title="Natural's Not In It",
+            status='published'
+        )
+        for i in range(5):
+            self.generate_additional_review(song, i)
+
+        self.assertEqual(
+            song.controversy_debug_string(),
+            "[1.2][1][5]"
+        )
+
 
 class ScheduledWeekTests(TestCase):
 

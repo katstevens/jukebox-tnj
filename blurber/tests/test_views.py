@@ -443,6 +443,7 @@ class PreviewPostTests(BlurberBaseViewTests):
         self.assertEqual(resp.context['song'], self.song)
         self.assertTrue(resp.context['show_admin_links'])
         self.assertContains(resp, "Preview")
+        self.assertContains(resp, self.song.controversy_debug_string())
 
     def test_fetch_html_hidden_for_writer(self):
         url = reverse('fetch_html', kwargs={'song_id': self.song.id })
@@ -458,3 +459,4 @@ class PreviewPostTests(BlurberBaseViewTests):
         self.assertEqual(resp.context['song'], self.song)
         self.assertFalse(resp.context['show_admin_links'])
         self.assertNotContains(resp, "Preview")
+        self.assertNotContains(resp, self.song.controversy_debug_string())

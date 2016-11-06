@@ -101,6 +101,9 @@ class Song(models.Model):
             extra_weighting = (self.blurb_count-8)*0.02
         return 1 + extra_weighting
 
+    def controversy_debug_string(self):
+        return "[%s][%s][%s]" % (self.controversy_index(), self.multiplier, self.blurb_count)
+
     def __str__(self):
         return "%s - %s" % (self.artist, self.title)
 
