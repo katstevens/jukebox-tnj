@@ -46,7 +46,7 @@ def my_blurbs(request, status=None, year=None):
 @staff_member_required(login_url='login')
 def all_writers(request, order='recent'):
     if order == 'name':
-        writers = Writer.objects.all().order_by('last_name')
+        writers = Writer.objects.all().order_by('last_name', 'first_name')
         order_text = 'By Name'
     else:
         # Default view: who's written most recently

@@ -1,4 +1,6 @@
+from datetime import datetime
 from django.test import TestCase
+from django.utils import timezone
 
 from writers.models import Writer
 from blurber.models import Song, Review
@@ -28,7 +30,8 @@ class WriterTests(TestCase):
             writer=self.writer,
             score=10,
             blurb='BrillSkillz',
-            status='published'
+            status='published',
+            create_date=datetime(2016, 1, 1, tzinfo=timezone.utc)
         )
         self.saved_review = Review.objects.create(
             song=self.song2,
@@ -37,6 +40,10 @@ class WriterTests(TestCase):
             blurb='BrillBuildingSkillz',
             status='saved'
         )
+        self.published_review.create_date = datetime(2016, 1, 1, tzinfo=timezone.utc)
+        self.published_review.save()
+        self.saved_review.create_date = datetime(2016, 1, 7, tzinfo=timezone.utc)
+        self.saved_review.save()
 
     def test_published_blurb_history(self):
 
@@ -58,8 +65,16 @@ class WriterTests(TestCase):
         self.assertEqual(self.writer.get_short_name(), "Kelly Rowland")
 
     def test_blurb_history_is_sorted_most_recent_first(self):
+
         self.assertQuerysetEqual(
             self.writer.blurb_history(),
             ['<Review: Kendrick Lemar - Swimming Pools (Drank): KR>',
              '<Review: Kendrick Lemar - King Kunta: KR>']
+        )
+
+    def test_last_blurb_date_picks_right_date(self):
+
+        self.assertEqual(
+            self.writer.last_blurb_date(),
+            datetime(2016, 1, 7, tzinfo=timezone.utc)
         )

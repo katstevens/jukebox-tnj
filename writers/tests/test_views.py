@@ -16,6 +16,7 @@ class WriterBaseViewTests(TestCase):
         self.writer = self.generate_writer('readyforthisjelly@123.com')
         self.editor = self.generate_writer(
             'whenimoveyoumove@123.com',
+            first_name="Michelle",
             is_staff=True
         )
 
@@ -54,10 +55,10 @@ class WriterBaseViewTests(TestCase):
         )
         self.week.monday.add(self.song1)
 
-    def generate_writer(self, username, is_staff=False):
+    def generate_writer(self, username, first_name="Robbie", is_staff=False):
         w = Writer.objects.create(
             username=username,
-            first_name='Michelle',
+            first_name=first_name,
             last_name='Williams',
             email=username,
             is_staff=is_staff
@@ -144,22 +145,57 @@ class WriterViewTests(WriterBaseViewTests):
         )
         self.assertTrue(resp.context['editor_view'])
 
-    def test_writer_list_hidden_for_writer(self):
+    def test_writer_lists_hidden_for_writer(self):
         self.assert_view_hidden_for_writer(reverse('all_writers'))
+        self.assert_view_hidden_for_writer(reverse('all_writers_alphabetical'))
 
-    def test_writer_list_visible_for_editor(self):
+    def test_writer_list_by_most_recent_visible_for_editor(self):
         r = self.client.force_login(self.editor)
         resp = self.client.get(
             reverse('all_writers')
         )
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed('all_writers.html')
-
-        self.assertEqual(
-            set([self.writer, self.editor]),
-            set(resp.context['writers'])
-        )
         self.assertTrue(resp.context['editor_view'])
+
+        # Writer Robbie has blurbed more recently than Editor Michelle
+        self.assertEqual(self.writer, resp.context['writers'][0])
+        self.assertEqual(self.editor, resp.context['writers'][1])
+
+        self.assertTrue(resp.context['order_text'], "By Most Recent Blurb")
+        self.assertContains(resp, "Sort alphabetically")
+
+    def test_writer_list_by_name_visible_for_editor(self):
+        r = self.client.force_login(self.editor)
+        resp = self.client.get(
+            reverse('all_writers_alphabetical')
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed('all_writers.html')
+        self.assertTrue(resp.context['editor_view'])
+
+        # Editor Michelle comes before Writer Robbie alphabetically
+        self.assertEqual(self.editor, resp.context['writers'][0])
+        self.assertEqual(self.writer, resp.context['writers'][1])
+
+        self.assertTrue(resp.context['order_text'], "By Name")
+        self.assertContains(resp, "Sort by most recently blurbed")
+
+    def test_writer_with_no_blurbs_shows_empty_message_in_list(self):
+        # Create a writer with no blurbs
+        andy = self.generate_writer('amarillo@example.com', first_name="Andy")
+        r = self.client.force_login(self.editor)
+        resp = self.client.get(
+            reverse('all_writers')
+        )
+
+        # Andy comes after Robbie and Michelle
+        self.assertEqual(self.writer, resp.context['writers'][0])
+        self.assertEqual(self.editor, resp.context['writers'][1])
+        self.assertEqual(andy, resp.context['writers'][2])
+
+        self.assertContains(resp, "Andy Williams")
+        self.assertContains(resp, "No blurbs yet")
 
 
 class RegistrationTests(WriterBaseViewTests):

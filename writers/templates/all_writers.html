@@ -25,8 +25,12 @@
 					<a href="{% url 'writer_blurbs' writer.id %}">{{ writer.get_full_name }}</a><br />
 				</td>
 				<td>
-					{{ writer.last_blurb_date|timezone:"Europe/London"|date:"D d M Y" }}
-					{{ writer.last_blurb_date|timezone:"Europe/London"|time:"H:i" }}
+					{% if writer.last_blurb_date|date:"d M Y" == '01 Jan 1970' %}
+						No blurbs yet
+					{% else %}
+						{{ writer.last_blurb_date|timezone:"Europe/London"|date:"D d M Y" }}
+						{{ writer.last_blurb_date|timezone:"Europe/London"|time:"H:i" }}
+					{% endif %}
 				</td>
 			</tr>
 		{% endfor %}
