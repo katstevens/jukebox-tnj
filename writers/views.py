@@ -51,7 +51,7 @@ def all_writers(request, order='recent'):
     else:
         # Default view: who's written most recently
         ws = Writer.objects.all()
-        writers = sorted(ws, key=lambda x: x.last_blurb_date())
+        writers = sorted(ws, key=lambda x: x.last_blurb_date(), reverse=True)
         order_text = 'By Most Recent Blurb'
 
     return render(
