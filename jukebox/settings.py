@@ -134,3 +134,8 @@ STATICFILES_DIRS = [
 EMAIL_ADMINS = ['kat.stevens@gmail.com']
 EMAIL_FROM_ADDRESS = "Princess Superstar <kat.stevens@gmail.com>"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Wordpress
+XML_RPC_URL = ''
+XML_RPC_USERNAME = ''
+XML_RPC_PW = ''

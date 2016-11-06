@@ -1,5 +1,6 @@
 Django==1.9.2
 mysqlclient==1.3.9
+python-wordpress-xmlrpc
 pytz==2015.7
 requests==2.9.1
 wheel==0.29.0
