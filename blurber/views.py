@@ -15,6 +15,8 @@ from blurber.models import Song, ScheduledWeek, Review
 from blurber.forms import ReviewForm, UploadSongForm
 
 
+# Writer views
+
 @login_required
 def weekly_schedule(request):
 
@@ -37,7 +39,6 @@ def weekly_schedule(request):
             'user_songs': [review.song for review in user_reviews]
         }
     )
-
 
 @login_required
 def write_review(request, song_id, use_html=False):
@@ -79,6 +80,8 @@ def write_review(request, song_id, use_html=False):
         }
     )
 
+
+# Editor views
 
 @staff_member_required(login_url="login")
 def upload_song(request):
