@@ -30,7 +30,7 @@
 		</table>
 	</div>
 
-	<table>
+	<table class="schedule">
 	{% for song in all_open_songs %}
 		<tr class="{{ song.css_class }}">
 			{% if request.user.is_staff %}

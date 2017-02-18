@@ -2,23 +2,23 @@
 ------------------------------ */
 
 #container{
-background:#EDF;
+background:#dce5f5;
 width:90%;
-border:solid #000;
+border:solid #4c87ef;
 border-width:2px;
 margin: 10px;
 text-align:left;
 color:#141414;
 position:relative;
 padding: 1em;
+z-index:1;
   }
 body{
 font-family: "Verdana", "Bitstream Vera Sans", lucida, arial, helvetica, sans-serif;
 padding: 0;
-background: #4De6B4;
+background: #b9cbe8;
 color: #111;
 line-height: 1.166;
-background:  #FEC;
 margin: 0;
 }
 
@@ -50,9 +50,11 @@ a:hover{
 	text-decoration: underline;
 }
 h1{
- font-size: 160%;
+ font-size: 150%;
  margin: 0px;
- padding: 0px;
+ padding: 0 0 0.5em 0;
+ width:40%;
+ display:block;
 font: Eurostile;
 }
 h2{
@@ -86,7 +88,6 @@ background: #115533 no-repeat center right;
 color: #fff;
 margin: 0 0 0 0;
 height: 42px;
-border-bottom: 2px solid #3C6DC6;
 padding: 3px;
 }
 
@@ -112,16 +113,16 @@ border: 2px dotted #555;
 	border-width: 1px 1px 1px 1px;
 	border-spacing: 2px;
 	border-style: outset outset outset outset;
-	border-color: black black black black;
+	border-color: #4c87ef;
 	border-collapse: collapse;
 
 }
 
 table td {
 	border-width: 1px 1px 1px 1px;
-	padding: 3px 3px 3px 3px;
+	padding: 0.3em 0.5em;
 	border-style: solid solid solid solid;
-	border-color: gray gray gray gray;
+	border-color: gray;
 
 	-moz-border-radius: 0px 0px 0px 0px;
 }
@@ -170,8 +171,9 @@ background-color: #fff;
 }
  
 /* BONUS */
-.this-week {
-    border-top:1px solid #555;
+.this-week,
+.schedule {
+    z-index:1;
 }
 
 .this-week a {
@@ -187,4 +189,52 @@ background-color: #fff;
     list-style: none;
     margin:0;
     padding:0;
+}
+
+.writer-menu {
+    font-size:0.8em;
+    margin-top: 0;
+    display:block;
+    float:right;
+    clear:right;
+    width:30%;
+    background: #fff;
+    position: absolute;
+    right:1em;
+    z-index:20;
+    border: solid #daeafa;
+    border-width: 2px;
+}
+.writer-actions {
+    display:none;
+}
+.writer-actions ul {
+    list-style-type: none;
+    margin:0;
+    padding:0;
+}
+.writer-actions ul li {
+    padding: 0 1em;
+}
+.writer-menu span,
+.writer-actions a {
+    padding:1em 0;
+    width:100%;
+}
+.writer-menu span {
+    display:block;
+    padding:1em;
+}
+.writer-menu:hover .writer-actions,
+.writer-menu:hover .writer-actions a {
+    display:block;
+}
+.writer-actions li:hover {
+    background: #daeafa;
+}
+
+.preview-source {
+    margin: 1em 0 0 0;
+    padding:1em;
+    background: #ffffff;
 }
