@@ -61,7 +61,7 @@ class Song(models.Model):
 
     @property
     def css_class(self):
-        if self.status == 'published':
+        if self.status in ['published', 'closed']:
             return 'dead'
         if self.blurb_count == 0:
             return 'new'
@@ -73,7 +73,7 @@ class Song(models.Model):
 
     @property
     def closed(self):
-        return True if self.status == 'published' else False
+        return True if self.status in ['published', 'closed'] else False
 
     def average_score(self):
         if self.blurb_count > 0:

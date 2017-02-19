@@ -24,7 +24,7 @@
 				{% for s in day_info.songs %}
 				<td class="{{ s.css_class }}">
 					{% if s.closed %}
-						{{ s.artist }}
+						<em>{{ s.artist }}</em>
 					{% else %}
 						<a href="{% url 'write_review' s.id %}">{{ s.artist }} ({{ s.blurb_count }})</a>
 					{% endif %}

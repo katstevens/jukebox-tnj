@@ -22,6 +22,11 @@ class SongTestBase(TestCase):
             title='The Boy Is Mine',
             status='published'
         )
+        self.closed_song = Song.objects.create(
+            artist='Girls Aloud',
+            title='The Promise',
+            status='closed'
+        )
 
         self.writer = Writer.objects.create(
             username='readyforthisjelly@123.com',
@@ -90,7 +95,8 @@ class SongTests(SongTestBase):
 
     def test_css_class_for_published_song_is_dead(self):
 
-        self.assertTrue(self.published_song.css_class, 'dead')
+        self.assertEqual(self.published_song.css_class, 'dead')
+        self.assertEqual(self.closed_song.css_class, 'dead')
 
     def test_closed_is_false_for_open_status(self):
 
@@ -99,6 +105,7 @@ class SongTests(SongTestBase):
     def test_closed_is_true_for_published_status(self):
 
         self.assertTrue(self.published_song.closed)
+        self.assertTrue(self.closed_song.closed)
 
     def test_average_score_is_zero_for_zero_blurb_count(self):
 
