@@ -71,5 +71,8 @@
 		</tr>
 	{% endfor %}
 	</table>
+	{% if request.user.is_staff %}
+	<p><a href="{% url 'admin:blurber_song_changelist' %}">View closed/published songs in admin &raquo;</a></p>
+	{% endif %}
 
 {% endblock %}
