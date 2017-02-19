@@ -127,6 +127,12 @@ class SongTests(SongTestBase):
 
         self.assertEqual(self.new_song.average_score(), 5.67)
 
+    def test_search_reviews_in_admin(self):
+        self.assertEqual(
+            self.new_song.admin_review_search_link,
+            "<a href='/admin/blurber/song/?q=washing+machine'>"
+            "Search for reviews of this song</a>"
+        )
 
 class ControversyIndexTests(SongTestBase):
 

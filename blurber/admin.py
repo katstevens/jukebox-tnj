@@ -21,14 +21,43 @@ class ScheduledWeekAdmin(admin.ModelAdmin):
 
     list_display = ['week_beginning', 'week_summary']
     ordering = ['-week_beginning']
-
+    readonly_fields = ['monday_songs', 'tuesday_songs', 'wednesday_songs',
+                       'thursday_songs', 'friday_songs', 'saturday_songs', ]
+    fields = (
+        'week_beginning', 'week_info',
+        ('monday', 'monday_songs'),
+        ('tuesday', 'tuesday_songs'),
+        ('wednesday', 'wednesday_songs'),
+        ('thursday', 'thursday_songs'),
+        ('friday', 'friday_songs'),
+        ('saturday', 'saturday_songs'),
+        'current_week'
+    )
 
 class SongAdmin(admin.ModelAdmin):
+
+    def search_reviews_link(self, obj):
+        return obj.admin_review_search_link
+    search_reviews_link.short_description = ''
+    search_reviews_link.allow_tags = True
 
     list_display = ['artist', 'title', 'status', 'publish_date']
     list_filter = ['status']
     ordering = ['-publish_date']
     search_fields = ['artist', 'title']
+    readonly_fields = ['search_reviews_link']
+
+    fieldsets = (
+        (None, {
+            'fields': ('artist', 'title', 'status', 'search_reviews_link')
+        }),
+        ("Media links", {
+            'fields': ('youtube_link', 'mp3_file', 'mp3_link','image_url', 'web_link')
+        }),
+        ('Publishing options', {
+            'fields': ('tagline', 'wordpress_post_id', 'display_user_ratings','publish_date'),
+        }),
+    )
 
 
 class ReviewAdmin(admin.ModelAdmin):

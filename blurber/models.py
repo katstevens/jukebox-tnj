@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.core.urlresolvers import reverse
 
 from writers.models import Writer
 
@@ -36,7 +37,7 @@ class Song(models.Model):
                                help_text="Will be available to writers in the blurber only.")
     youtube_link = models.URLField(null=True, blank=True,
                                    help_text="Will be available to writers in the blurber AND"
-                                             "on published post.")
+                                             " on published post.")
     web_link = models.URLField(null=True, blank=True,
                                help_text="Will appear on published post")
 
@@ -47,7 +48,9 @@ class Song(models.Model):
 
     wordpress_post_id = models.CharField(max_length=50, null=True, blank=True,
                                          help_text="Auto-filled on publish.")
-    display_user_ratings = models.BooleanField(default=True)
+    display_user_ratings = models.BooleanField(default=True,
+                                               help_text="I don't know what this does"
+                                                         " but prob something to do with Wordpress")
 
     publish_date = models.DateTimeField(help_text="Schedule a publish time here (TODO)", null=True, blank=True)
     upload_date = models.DateTimeField(auto_now_add=True)
@@ -113,6 +116,12 @@ class Song(models.Model):
 
     def controversy_debug_string(self):
         return "[%s][%s][%s]" % (self.controversy_index(), self.multiplier, self.blurb_count)
+
+    @property
+    def admin_review_search_link(self):
+        base_url = reverse('admin:blurber_song_changelist')
+        query_string = self.title.lower().replace(' ', '+')
+        return "<a href='%s?q=%s'>Search for reviews of this song</a>" % (base_url, query_string)
 
     def __str__(self):
         return "%s - %s" % (self.artist, self.title)
@@ -186,6 +195,29 @@ class ScheduledWeek(models.Model):
             self.friday,
             self.saturday
         ]
+
+    # For display in admin
+    def day_summary(self, day):
+        return "\n".join(day.values_list('artist', flat=True))
+
+    @property
+    def monday_songs(self):
+        return self.day_summary(self.monday.all())
+    @property
+    def tuesday_songs(self):
+        return self.day_summary(self.tuesday.all())
+    @property
+    def wednesday_songs(self):
+        return self.day_summary(self.wednesday.all())
+    @property
+    def thursday_songs(self):
+        return self.day_summary(self.thursday.all())
+    @property
+    def friday_songs(self):
+        return self.day_summary(self.friday.all())
+    @property
+    def saturday_songs(self):
+        return self.day_summary(self.saturday.all())
 
     @property
     def week_summary(self):
