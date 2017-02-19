@@ -11,7 +11,7 @@
 	</div>
 	<div>
 		<table>
-			<tr><td>Order</td><td>Review</td></tr>
+			<tr style="font-style:italic"><td>Order</td><td>Review</td><td>Sort</td></tr>
 
 			{% for r in reviews %}
 				<tr>
@@ -23,14 +23,18 @@
 						{{ r.blurb|safe }}
 						<strong>[{{ r.score }}]</strong>
 					</td>
-					<td>
-						{% if r.sort_order > 1 %}
-						<a href="{% url 'move_review_top' r.id %}">Move to top</a><br />
-						<a href="{% url 'move_review_up' r.id %}">Move up</a><br />
-						{% endif %}
-						{% if r.sort_order < review_count %}
-						<a href="{% url 'move_review_down' r.id %}">Move down</a><br />
-						<a href="{% url 'move_review_bottom' r.id %}">Move to bottom</a>
+					<td width="20%	">
+						{% if forloop.first %}
+							&darr;&nbsp; <a href="{% url 'move_review_down' r.id %}">Move down one</a><br />
+							&darr;&darr; <a href="{% url 'move_review_bottom' r.id %}">Move to bottom</a>
+						{% elif forloop.last %}
+							&uarr;&uarr; <a href="{% url 'move_review_top' r.id %}">Move to top</a><br />
+							&uarr;&nbsp; <a href="{% url 'move_review_up' r.id %}">Move up one</a>
+						{% else %}
+							&uarr;&uarr; <a href="{% url 'move_review_top' r.id %}">Move to top</a><br />
+							&uarr;&nbsp; <a href="{% url 'move_review_up' r.id %}">Move up one</a><br />
+							&darr;&nbsp; <a href="{% url 'move_review_down' r.id %}">Move down one</a><br />
+							&darr;&darr; <a href="{% url 'move_review_bottom' r.id %}">Move to bottom</a>
 						{% endif %}
 					</td>
 				</tr>
