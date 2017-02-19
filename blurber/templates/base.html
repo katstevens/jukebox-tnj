@@ -3,7 +3,7 @@
 <html>
 <head>
 <title>TSJ 2.0 {% block extra_title %}{% endblock %}</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="{% static 'css/jukebox.css' %}" type="text/css" />
 <script type="text/javascript" src="{% static 'js/jquery-1.9.1.min.js' %}"></script>
@@ -13,7 +13,7 @@
 {% block main %}
 <div id="container">
 	{% block header_links %}
-		<div class="writer-menu">
+		<div class="writer-menu desktop">
 			<span>Logged in as: <a href="{% url 'my_blurbs' %}">{{ request.user.get_short_name }}</a></span>
 
 			<div class="writer-actions">
@@ -34,8 +34,23 @@
 	<h1 class="header">
 		TSJ 2.0: {% block page_title %}{% endblock %}
 	</h1>
+	<div class="mobile-writer-menu mobile">
+		<span>Logged in as: <a href="{% url 'my_blurbs' %}">{{ request.user.get_short_name }}</a></span>
+		<ul>
+			<li><a href="{% url 'weekly_schedule' %}">Schedule</a></li>
+			<li><a href="{% url 'my_blurbs' %}">My blurbs</a></li>
+			<li><a href="http://furanes.net/blurbs/sitefaq.html">Site FAQ</a></li>
+		{% if request.user.is_staff %}
+			<li><a href="{% url 'upload_song' %}">Upload song</a></li>
+			<li><a href="{% url 'all_writers' %}">Writer list</a></li>
+			<li><a href="{% url 'admin:blurber_review_changelist' %}">Review log (admin)</a></li>
+		{% endif %}
+			<li><a href="">Log out</a></li>
+		</ul>
+	</div>
 	{% block content %}
 	{% endblock %}
+
 
 </div>
 
