@@ -94,6 +94,7 @@ def upload_song(request):
         if form.is_valid():
             song = form.save(commit=False)
             song.status = 'open'    # Can change in admin later
+            # TODO: copy uploaded link to MP3 link field
             song.save()
 
             if 'submit_and_return_to_songlist' in request.POST:
@@ -205,6 +206,7 @@ def _create_wp_post(song, content):
     post.post_status = 'publish'
     post.post_type = 'post'
     post.excerpt = song.tagline
+    # TODO: sort out scheduled post date
     post.date = datetime.now(tz=timezone.utc)
     post.date_modified = datetime.now(tz=timezone.utc)
 
