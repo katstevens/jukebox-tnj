@@ -120,6 +120,7 @@ class Review(models.Model):
     song = models.ForeignKey(Song)
 
     blurb = models.TextField(max_length=5000)
+    blurb_backup = models.TextField(max_length=5000, blank=True, null=True)
     score = models.IntegerField()
 
     sort_order = models.IntegerField(default=1)

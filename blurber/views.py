@@ -57,6 +57,8 @@ def write_review(request, song_id, use_html=False):
             # Save the form
             review = form.save(commit=False)
             review.status = 'saved'
+            # Copy backup of blurb (in case of admin change)
+            review.blurb_backup = review.blurb
             review.save()
 
             if 'submit_and_return_to_songlist' in request.POST:
