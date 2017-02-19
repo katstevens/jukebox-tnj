@@ -13,6 +13,9 @@
 		<h2>Schedule</h2>
 		<div id="week-info">
 			{{ this_week.week_info|safe }}
+			{% if request.user.is_staff %}
+			<p><a href="{% url 'admin:blurber_scheduledweek_change' this_week.id %}">Edit this week &raquo;</a></p>
+			{% endif %}
 		</div>
 		<table>
 			{% for day_info in this_week.weekdays %}

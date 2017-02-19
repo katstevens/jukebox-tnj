@@ -19,7 +19,7 @@
 					{{ r.sort_order }}
 					</td>
 					<td>
-						<p>{{ r.writer }}</p>
+						<p><a href="{% url 'writer_blurbs' r.writer.id %}">{{ r.writer.get_short_name }}</a></p>
 						{{ r.blurb|safe }}
 						<strong>[{{ r.score }}]</strong>
 					</td>

@@ -5,23 +5,40 @@
 
 {% block content %}
 	{% if editor_view %}
-		<div><p>Click 'Edit' to edit in the admin.</p></div>
+		<div>
+			<p>Click 'Edit' to edit in the admin.</p>
+			{% if status == 'saved' %}
+				[<a href="{% url 'writer_blurbs' writer.id %}">Show all</a>]
+				[Show pending only]
+				[<a href="{% url 'writer_blurbs_by_status' writer.id 'published' %}">Show published only</a>]
+			{% elif status == 'published' %}
+				[<a href="{% url 'writer_blurbs' writer.id %}">Show all</a>]
+				[<a href="{% url 'writer_blurbs_by_status' writer.id 'saved' %}">Show pending only</a>]
+				[Show published only]
+			{% else %}
+				[Show all]
+				[<a href="{% url 'writer_blurbs_by_status' writer.id 'saved' %}">Show pending only</a>]
+				[<a href="{% url 'writer_blurbs_by_status' writer.id 'published' %}">Show published only</a>]
+			{% endif %}
+		</div>
+	{% else %}
+		<div>
+			<br />
+			{% if status == 'saved' %}
+				[<a href="{% url 'my_blurbs' %}">Show all</a>]
+				[Show pending only]
+				[<a href="{% url 'my_blurbs_by_status' 'published' %}">Show published only</a>]
+			{% elif status == 'published' %}
+				[<a href="{% url 'my_blurbs' %}">Show all</a>]
+				[<a href="{% url 'my_blurbs_by_status' 'saved' %}">Show pending only</a>]
+				[Show published only]
+			{% else %}
+				[Show all]
+				[<a href="{% url 'my_blurbs_by_status' 'saved' %}">Show pending only</a>]
+				[<a href="{% url 'my_blurbs_by_status' 'published' %}">Show published only</a>]
+			{% endif %}
+		</div>
 	{% endif %}
-	<div>
-		<br />
-		{% if status == 'saved' %}
-			[<a href="{% url 'my_blurbs' %}">Show all</a>]
-			[<a href="{% url 'my_blurbs_by_status' 'published' %}">Show published only</a>]
-		{% elif status == 'published' %}
-			[<a href="{% url 'my_blurbs' %}">Show all</a>]
-			[<a href="{% url 'my_blurbs_by_status' 'saved' %}">Show pending only</a>]
-
-		{% else %}
-			[<a href="{% url 'my_blurbs_by_status' 'saved' %}">Show pending only</a>]
-			[<a href="{% url 'my_blurbs_by_status' 'published' %}">Show published only</a>]
-		{% endif %}
-	</div>
-	<p>
 		{% for review in reviews %}
 			<p><strong>{{ review.song }}</strong>
 			{% if editor_view %}

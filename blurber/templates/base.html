@@ -26,13 +26,13 @@
 					<li><a href="{% url 'all_writers' %}">Writer list</a></li>
 					<li><a href="{% url 'admin:blurber_review_changelist' %}">Review log (admin)</a></li>
 				{% endif %}
-					<li><a href="">Log out</a></li>
+					<li><a href="{% url 'logout' %}">Log out</a></li>
 				</ul>
 			</div>
 		</div>
 	{% endblock %}
 	<h1 class="header">
-		TSJ 2.0: {% block page_title %}{% endblock %}
+		<a href="{% url 'weekly_schedule' %}">TSJ 2.0:</a> {% block page_title %}{% endblock %}
 	</h1>
 	<div class="mobile-writer-menu mobile">
 		<span>Logged in as: <a href="{% url 'my_blurbs' %}">{{ request.user.get_short_name }}</a></span>
@@ -45,7 +45,7 @@
 			<li><a href="{% url 'all_writers' %}">Writer list</a></li>
 			<li><a href="{% url 'admin:blurber_review_changelist' %}">Review log (admin)</a></li>
 		{% endif %}
-			<li><a href="">Log out</a></li>
+			<li><a href="{% url 'logout' %}">Log out</a></li>
 		</ul>
 	</div>
 	{% block content %}
