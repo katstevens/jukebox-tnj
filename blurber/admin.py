@@ -17,6 +17,12 @@ def send_email_if_blurb_removed(obj, user):
     return result
 
 
+class ScheduledWeekAdmin(admin.ModelAdmin):
+
+    list_display = ['week_beginning', 'week_summary']
+    ordering = ['-week_beginning']
+
+
 class SongAdmin(admin.ModelAdmin):
 
     list_display = ['artist', 'title', 'status', 'publish_date']
@@ -44,4 +50,4 @@ class ReviewAdmin(admin.ModelAdmin):
 
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Song, SongAdmin)
-admin.site.register(ScheduledWeek)
+admin.site.register(ScheduledWeek, ScheduledWeekAdmin)

@@ -25,21 +25,31 @@ class Song(models.Model):
     artist = models.CharField(max_length=256)
     title = models.CharField(max_length=400)
 
+    status = models.CharField(choices=SONG_STATUS_CHOICES, max_length=20, default='open',
+                              help_text="Close/publish/remove the song here.")
+
     # file will be uploaded to MEDIA_ROOT/somewhere
-    mp3_file = models.FileField(upload_to='somewhere', null=True, blank=True)
+    mp3_file = models.FileField(upload_to='somewhere', null=True, blank=True,
+                                help_text="Will be available to writers in the blurber only.")
 
-    mp3_link = models.URLField(null=True, blank=True)
-    youtube_link = models.URLField(null=True, blank=True)
-    web_link = models.URLField(null=True, blank=True)
+    mp3_link = models.URLField(null=True, blank=True,
+                               help_text="Will be available to writers in the blurber only.")
+    youtube_link = models.URLField(null=True, blank=True,
+                                   help_text="Will be available to writers in the blurber AND"
+                                             "on published post.")
+    web_link = models.URLField(null=True, blank=True,
+                               help_text="Will appear on published post")
 
-    image_url = models.URLField(null=True, blank=True)
-    tagline = models.CharField(max_length=255, null=True, blank=True)
+    image_url = models.URLField(null=True, blank=True,
+                                help_text="Will appear on published post.")
+    tagline = models.CharField(max_length=255, null=True, blank=True,
+                               help_text="Will appear on published post.")
 
-    wordpress_post_id = models.CharField(max_length=50, null=True, blank=True)
+    wordpress_post_id = models.CharField(max_length=50, null=True, blank=True,
+                                         help_text="Auto-filled on publish.")
     display_user_ratings = models.BooleanField(default=True)
-    status = models.CharField(choices=SONG_STATUS_CHOICES, max_length=20, default='open')
 
-    publish_date = models.DateTimeField(help_text="Schedule a publish time here", null=True, blank=True)
+    publish_date = models.DateTimeField(help_text="Schedule a publish time here (TODO)", null=True, blank=True)
     upload_date = models.DateTimeField(auto_now_add=True)
 
     def saved_reviews(self):
@@ -166,6 +176,25 @@ class ScheduledWeek(models.Model):
             {'daystring': 'FRIDAY', 'songs': self.friday.all()},
             {'daystring': 'SATURDAY', 'songs': self.saturday.all()},
         ]
+
+    def _all_days(self):
+        return [
+            self.monday,
+            self.tuesday,
+            self.wednesday,
+            self.thursday,
+            self.friday,
+            self.saturday
+        ]
+
+    @property
+    def week_summary(self):
+        summary = ", ".join(
+            [", ".join(day.all().values_list('artist', flat=True)) for day in self._all_days()]
+        )
+        if len(summary) > 128:
+            return summary[:128] + "..."
+        return summary
 
     class Meta:
         ordering = ['-week_beginning']

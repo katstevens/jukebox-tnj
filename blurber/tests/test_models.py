@@ -205,6 +205,44 @@ class ScheduledWeekTests(TestCase):
             title='Thong Song',
             status='new'
         )
+        self.another_song = Song.objects.create(
+            artist='Prince',
+            title='1999',
+            status='new'
+        )
+        self.yet_another_song = Song.objects.create(
+            artist='UB40',
+            title='Rat In My Kitchen',
+            status='new'
+        )
+
+    def test_week_summary_shows_all(self):
+        s = ScheduledWeek.objects.create(
+            week_beginning=datetime(2015, 1, 1),
+        )
+        for day in s._all_days():
+            day.add(self.new_song)
+
+        actual = s.week_summary
+        self.assertEqual(
+            actual, "Sisquo, Sisquo, Sisquo, Sisquo, Sisquo, Sisquo"
+        )
+
+    def test_week_summary_shows_truncated(self):
+        s = ScheduledWeek.objects.create(
+            week_beginning=datetime(2015, 1, 1),
+        )
+        for day in s._all_days():
+            day.add(self.new_song)
+            day.add(self.another_song)
+            day.add(self.yet_another_song)
+
+        actual = s.week_summary
+        expected = "UB40, Prince, Sisquo, UB40, Prince, Sisquo, UB40, Prince, Sisquo, " \
+                   "UB40, Prince, Sisquo, UB40, Prince, Sisquo, UB40, Prince, Sisq..."
+        self.assertEqual(
+            actual, expected
+        )
 
     def test_weekdays(self):
         s = ScheduledWeek.objects.create(
