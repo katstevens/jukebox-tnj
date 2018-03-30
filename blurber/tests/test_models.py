@@ -130,7 +130,7 @@ class SongTests(SongTestBase):
     def test_search_reviews_in_admin(self):
         self.assertEqual(
             self.new_song.admin_review_search_link,
-            "<a href='/admin/blurber/song/?q=washing+machine'>"
+            "<a href='/admin/blurber/review/?q=washing+machine'>"
             "Search for reviews of this song</a>"
         )
 

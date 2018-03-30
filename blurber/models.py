@@ -119,7 +119,7 @@ class Song(models.Model):
 
     @property
     def admin_review_search_link(self):
-        base_url = reverse('admin:blurber_song_changelist')
+        base_url = reverse('admin:blurber_review_changelist')
         query_string = self.title.lower().replace(' ', '+')
         return "<a href='%s?q=%s'>Search for reviews of this song</a>" % (base_url, query_string)
 
