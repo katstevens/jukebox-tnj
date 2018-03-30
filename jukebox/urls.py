@@ -24,6 +24,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^blurbs/', include('writers.urls')),
+    url(r'', include('tsj.urls')),
+
     url(r'', include('blurber.urls')),
     url(r'', include('django.contrib.auth.urls')),
 

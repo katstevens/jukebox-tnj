@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'writers',
     'blurber',
+    'tsj',
     'django.contrib.admin',     # Put this after 'writers' to use registration templates
 ]
 AUTH_USER_MODEL = 'writers.Writer'

@@ -1,0 +1,42 @@
+<div class="post">
+<h2><a href="{% url 'single_post' song.id %}">{{ song.artist }} - {{ song.title }}</a></h2>
+<p><em>{{ song.tagline }}</em></p>
+<center>
+    <img src="{{ song.image_url }}" border="2" />
+    <br />
+    <strong>{% if song.youtube_link %}[<a href="{{ song.youtube_link }}">Video</a>]{% endif %}
+        {% if song.web_link %}[<a href="{{ song.web_link }}">Website</a>]{% endif %}
+    <br><a title='Controversy index:{{ song.controversy_index|floatformat:"2" }}
+    {% if show_admin_links %}{{ song.controversy_debug_string }}{% endif %}'>[{{ song.average_score }}]</a>
+    </strong>
+</center>
+    <div class="entry">
+
+{% for r in song.published_reviews %}
+    <p><strong>{% if r.writer.bio_link %}
+        <a href="{{ r.writer.bio_link }}">{{ r.writer.get_full_name }}</a>:
+        {% else %}
+        {{ r.writer.get_full_name }}:
+        {% endif %}
+        </strong>
+        {{ r.blurb|safe }}<br />
+        [{{ r.score }}]
+        <br />
+        {% if show_admin_links %}
+        [<a href="{% url 'writer_blurbs' r.writer.id %}">All {{ r.writer.get_full_name }}'s blurbs</a>]
+        {% endif %}
+    </p>
+{% endfor %}
+    </div>
+
+    {% if page_no %}
+    {# Only show links for multi-post pages #}
+     <p class="postmetadata">
+            <a href="{% url 'single_post' song.id %}#respond">no blergs &#187;</a>
+            <a href="{% url 'single_post' song.id %}#respond"></a> Tuesday, March 27th, 2018 11:00 am
+        </p>
+    {% else %}
+        {# TODO: comment form! #}
+        Comments closed.
+    {% endif %}
+</div>

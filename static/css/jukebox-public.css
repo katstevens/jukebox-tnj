@@ -1,0 +1,479 @@
+/*
+Theme Name: The Singles Jukebox
+Theme URI: http://www.thesinglesjukebox.com
+Description: The Singles Jukebox theme - responsive version
+Version: 2.0
+Authors: WB Swygart and Kat Stevens
+Author URI: http://www.thesinglesjukebox.com/
+
+*/
+body, h1, h2, h3, h4, h5, h6, blockquote, p{
+margin: 0;
+padding: 0;
+}
+
+body{
+	margin: 0px;
+	font-family: Verdana, Helvetica, Georgia, sans-serif;
+	font-size: 12px;
+	text-align: left;
+	vertical-align: top;
+	background: #ffffff;
+	color: #000000;
+}
+
+h1{
+font-family: Eurostile, Rockwell, sans-serif;
+font-size: 48px;
+padding: 0 0 10px 0;
+}
+
+img{
+border: 2px solid #000000;
+}
+
+
+a:link{
+border-bottom-width: 1px;
+border-left-width: 0px;
+border-right-width: 0px;
+border-top-width: 0px;
+border-style: solid;
+text-decoration: none;
+color: #000000;
+}
+
+a:visited{
+color: #ff0000;
+}
+
+:visited{
+color: #ff0000;
+}
+
+a:hover{
+color: #ff0000;
+}
+
+p{
+padding: 10px 0 0 0;
+}
+
+#wrapper{
+margin: 0 auto 0 auto
+width: 800px
+text-align: left;
+}
+
+#header{
+float: left;
+font-family: Verdana, sans-serif;
+width: 97%;
+font-size: 12px;
+text-align: center;
+padding: 20px 0 10px 0;
+}
+
+#header a:link, a:visited{
+border-bottom-width: 0px;
+border-left-width: 0px;
+border-right-width: 0px;
+border-top-width: 0px;
+border-style: none;
+text-decoration: none;
+color: #000000;
+}
+
+#header a:hover{
+text-decoration: none;
+color: #000000;
+}
+
+#container{
+width: 60%;
+float: left;
+}
+
+.post{
+padding: 0px 10px 10px 10px;
+text-align: left;
+}
+
+.post a:link{
+border-bottom-width: 1px;
+border-left-width: 0px;
+border-right-width: 0px;
+border-top-width: 0px;
+border-style: dotted;
+text-decoration: none;
+}
+
+.post h2{
+font-family: Eurostile, Rockwell, sans-serif;
+font-size: 24px;
+text-align: left;
+text-decoration: none;
+}
+
+.post h2 a:link{
+border-bottom-width: 0px;
+border-left-width: 0px;
+border-right-width: 0px;
+border-top-width: 0px;
+border-style: none;
+text-decoration: none;
+color: #000000;
+}
+
+.post h2 a:visited{
+border-bottom-width: 0px;
+border-left-width: 0px;
+border-right-width: 0px;
+border-top-width: 0px;
+border-style: none;
+text-decoration: none;
+color: #000000;
+}
+
+.post h2 a:hover{
+text-decoration: none;
+color: #ff0000;
+}
+
+.entry{
+line-height: 15px;
+}
+
+p.postmetadata{
+margin: 10px 0 10px 0;
+}
+
+.navigation{
+padding: 0 0 10px 0;
+font-size: 10px;
+font-weight: bold;
+line-height: 15px;
+text-align: center;
+}
+
+.sidebar{
+float: left;
+width: 15%;
+margin: 0 1.5% 0 1.5%;
+height: 100%
+text-align: left;
+font-size: 10px;
+}
+
+.sidebar ul{
+list-style-type: none;
+margin: 0;
+padding: 0 0px 0 0px;
+text-align: right;
+}
+
+.sidebar ul li{
+padding: 5px 0 5px 0;
+}
+
+.sidebar ul li h2{
+font-family: Eurostile, Rockwell, sans-serif;
+font-size: 14px;
+}
+
+.sidebar ul ul li{
+padding: 0;
+line-height: 20px;
+}
+
+.sidebar a:link, a:visited{
+border-bottom-width: 0px;
+border-left-width: 0px;
+border-right-width: 0px;
+border-top-width: 0px;
+border-style: none;
+text-decoration: none;
+color: #000000;
+}
+
+.sidebar a:hover{
+text-decoration: none;
+color: #ff0000;
+}
+
+.sidebar2{
+float: left;
+width: 15%;
+margin: 0 1.5% 0 1.5%;
+height: 100%
+text-align: left;
+font-size: 10px;
+}
+
+.sidebar2 ul{
+list-style-type: none;
+margin: 0;
+padding: 0 0 0 0;
+text-align: left;
+}
+
+.sidebar2 ul li{
+padding: 5px 0 5px 0;
+}
+
+.sidebar2 ul li h2{
+font-family: Eurostile, Rockwell, sans-serif;
+font-size: 14px;
+}
+
+.sidebar2 ul ul li{
+padding: 0;
+line-height: 20px;
+}
+
+.sidebar2 a:link, a:visited{
+border-bottom-width: 0px;
+border-left-width: 0px;
+border-right-width: 0px;
+border-top-width: 0px;
+border-style: none;
+text-decoration: none;
+color: #000000;
+}
+
+.sidebar2 a:hover{
+text-decoration: none;
+color: #ff0000;
+}
+
+#wp-calendar{
+width: 100%;
+text-align: right;
+}
+
+.comments-template{
+	margin: 10px 0 0;
+	border-top: 1px solid #ccc;
+	padding: 10px 0 0;
+}
+
+.comments-template ol{
+	margin: 0;
+	padding: 0 0 15px;
+	list-style: none;
+}
+
+.comments-template ol li{
+	margin: 10px 0 0;
+	line-height: 18px;
+	padding: 0 0 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.comments-template h2, .comments-template h3{
+	font-family: Verdana, Sans-serif;
+	font-size: 14px;
+}
+
+.commentmetadata{
+	font-size: 12px;
+}
+
+.comments-template p.nocomments{
+	padding: 0;
+}
+
+.comments-template textarea{
+	font-family: Verdana, Helvetica, Georgia, Sans-serif;
+	font-size: 12px;
+}
+
+#footer{
+padding: 10px 0 0 0;
+clear: both;
+float: left;
+width: 97%;
+}
+
+#footer p{
+line-height: 18px;
+}
+
+.noborder {
+border: 0;
+vertical-align: bottom;
+}
+
+/* Mobile styles by Kat Stevens, 20 August 2017 */
+/*
+Requires the following viewport meta tag inside the <head> element,
+before the stylesheet link:
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+*/
+@media only screen and (max-width: 480px) {
+
+    body {
+        font-size: 0.8em;
+    }
+    #wrapper {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        /* flexbox stuff */
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -moz-box-orient: vertical;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        /* optional */
+        -webkit-box-align: start;
+        -moz-box-align: start;
+        -ms-flex-align: start;
+        -webkit-align-items: flex-start;
+        align-items: flex-start;
+    }
+    .sidebar2 {
+        float: none;
+        clear: both;
+        font-size: 0.9em;
+        width: 98%;
+        padding: 0;
+        margin: 0;
+        /* flexbox */
+        -webkit-box-ordinal-group: 4;
+        -moz-box-ordinal-group: 4;
+        -ms-flex-order: 4;
+        -webkit-order: 4;
+        order: 4;
+    }
+    .sidebar ul, .sidebar2 ul {
+        text-align: left;
+        padding-left: 0.5em
+    }
+    .sidebar ul ul li, .sidebar2 ul ul li {
+        padding: 0.5em 0;
+    }
+    .sidebar {
+        float: none;
+        clear: both;
+        font-size: 0.9em;
+        width: 98%;
+        padding: 0;
+        margin: 0;
+        /* flexbox */
+        -webkit-box-ordinal-group: 3;
+        -moz-box-ordinal-group: 3;
+        -ms-flex-order: 3;
+        -webkit-order: 3;
+        order: 3;
+    }
+    #header {
+        padding: 1em 0;
+        width: 98%;
+        /* flexbox */
+        -webkit-box-ordinal-group: 1;
+        -moz-box-ordinal-group: 1;
+        -ms-flex-order: 1;
+        -webkit-order: 1;
+        order: 1
+    }
+    #header p {
+        padding: 0;
+    }
+    #header a {
+        display: block;
+        padding: 1em 0 0 0;
+        font-size: 1.5em;
+        text-decoration: underline;
+    }
+    h1 {
+        font-size: 2.5em;
+    }
+    #header h1 a {
+        display: inline;
+        padding:0;
+        font-size: inherit;
+        text-decoration: none;
+    }
+    #container {
+        padding: 0;
+        float: none;
+        clear: both;
+        width: 100%;
+        margin: 1em 0 0 0;
+        /* flexbox */
+        -webkit-box-ordinal-group: 2;
+        -moz-box-ordinal-group: 2;
+        -ms-flex-order: 2;
+        -webkit-order: 2;
+        order: 2
+    }
+    img {
+        border: 0;
+        margin: 0 0 0.5em 0;
+        width: 100%;
+    }
+    #footer {
+        float: none;
+        clear: both;
+        font-size: 0.8em;
+        width: 98%;
+        padding: 0;
+        margin: 0;
+        /* flexbox */
+        -webkit-box-ordinal-group: 5;
+        -moz-box-ordinal-group: 5;
+        -ms-flex-order: 5;
+        -webkit-order: 5;
+        order: 5;
+    }
+    .post {
+        padding: 1em 0 0 0;
+        margin: 0;
+        text-align: center;
+        border-top: 3px solid #fcbfab;
+     }
+    .post h2 {
+        padding: 0.5em 0;
+        margin: 0.5em 0 0 0;
+        width: 100%;
+        text-align: center;
+        font-size: 2em;
+    }
+    .entry p {
+        padding:0 0.5em;
+        text-align: left;
+        margin: 1em 0 0
+    }
+    .entry p:first-child {
+        text-align: center;
+
+    }
+    .entry p.postmetadata {
+        margin-bottom: 2em;
+    }
+    input, textarea {
+        border-color: #bbb;
+        font-size:1.5em;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .comments-template p input, textarea {
+        width: 96%;
+    }
+    .comments-template ol li {
+        text-align: left;
+        padding: 0 0 1em 0.5em;
+    }
+    .navigation {
+        padding: 1em 0;
+        font-size: 1em;
+    }
+}

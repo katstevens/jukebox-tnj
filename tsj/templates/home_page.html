@@ -1,0 +1,9 @@
+{% extends 'public_base.html' %}
+
+{% block content %}
+    {% for song in recent_songs %}
+        {% include "song.html" %}
+    {% endfor %}
+
+    {# TODO: prev/next pagination here #}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>The Singles Jukebox {% block extra_title %}{% endblock %}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="{% static 'css/jukebox-public.css' %}" type="text/css" />
+<script type="text/javascript" src="{% static 'js/jquery-1.9.1.min.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
+</head>
+<body>
+<div id="header">
+
+<h1><a href="http://www.thesinglesjukebox.com">The Singles Jukebox</a></h1>
+Pop, to two decimal places<BR>
+<a href="{% url 'about' %}">About</a><BR>
+
+{% include "search_box.html" %}
+
+<div class="sidebar">
+	{% include "archives.html" %}
+</div>
+{% block main %}
+	<div id="container">
+		{% block content %}
+		{% endblock %}
+	</div>
+
+{% endblock %}
+
+
+<div class="sidebar2">
+	{% include "blogroll.html" %}
+</div>
+
+{{ analytics_code }}
+
+	<div id="footer">
+		{% include "footer.html" %}
+	</div>
+</body>
+</html>
