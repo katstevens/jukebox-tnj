@@ -58,6 +58,9 @@ class Song(models.Model):
     def saved_reviews(self):
         return self.review_set.filter(song=self, status__in=['saved', 'published'])
 
+    def published_reviews(self):
+        return self.review_set.filter(song=self, status__in=['published']).order_by('sort_order')
+
     @property
     def blurb_count(self):
         return self.saved_reviews().count()

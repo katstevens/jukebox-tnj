@@ -43,7 +43,8 @@ class SongTestBase(TestCase):
             blurb='Crowd say bo selecta'
         )
 
-    def generate_additional_review(self, song, i, score=None):
+    @staticmethod
+    def generate_additional_review(song, i, score=None, status='saved'):
         if not score:
             score = i
         w = Writer.objects.create(
@@ -54,9 +55,11 @@ class SongTestBase(TestCase):
             writer=w,
             blurb="blurb %s" % i,
             score=score,
-            status='saved'
+            status=status,
+            sort_order=i
         )
         next_review.save()
+        return next_review
 
 
 class SongTests(SongTestBase):
@@ -65,6 +68,19 @@ class SongTests(SongTestBase):
         self.assertQuerysetEqual(
             self.song.saved_reviews(),
             ['<Review: Roisín Murphy - Gone Fishing: MW>']
+        )
+
+    def test_published_reviews_uses_sort_order(self):
+        r = self.generate_additional_review(self.published_song, 2, status='published')
+        r = self.generate_additional_review(self.published_song, 1, status='published')
+        # TODO: all reviews should have their status changed when song is published
+        r = self.generate_additional_review(self.published_song, 3, status='saved')
+        self.assertQuerysetEqual(
+            self.published_song.published_reviews(),
+            [
+                '<Review: Brandy & Monica - The Boy Is Mine: 11>',
+                '<Review: Brandy & Monica - The Boy Is Mine: 22>'
+            ]
         )
 
     def test_blurb_count(self):
