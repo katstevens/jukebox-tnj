@@ -5,6 +5,15 @@
 
 {% block content %}
 	<div>
+		{% if close_action or publish_action %}
+		<div class="confirmation">
+			{% if error_message %}
+				{{ error_message }}
+			{% elif close_action %}Song has been closed.
+			{% elif publish_action %}Song has been published.
+			{% endif %}
+		</div>
+		{% endif %}
 		<br />
 		<h3>{{ song.title }} by {{ song.artist }}</h3>
 		<p>{{ review_count }} review(s)</p>

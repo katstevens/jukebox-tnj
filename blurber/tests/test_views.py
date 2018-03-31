@@ -361,6 +361,53 @@ class ViewReviewsTest(BlurberBaseViewTests):
             resp, reverse('close_song', args=[closed_song.id])
         )
 
+    def test_close_song_changes_status(self):
+        r = self.client.force_login(self.editor)
+        resp = self.client.get(
+            reverse('close_song', kwargs={'song_id': self.song.id})
+        )
+
+        self.assertContains(resp, "Song has been closed.")
+        fresh_song_db_lookup = Song.objects.get(id=self.song.id)
+        self.assertEqual(fresh_song_db_lookup .status, "closed")
+
+    def test_publish_post_changes_song_and_review_statuses(self):
+        r = self.client.force_login(self.editor)
+        closed_song = self.generate_new_song(status='closed')
+        review1 = Review.objects.create(
+            song=closed_song,
+            writer=self.generate_writer('writer1s@place1.com'),
+            blurb='Go go go',
+            status='saved',
+            score=3,
+            sort_order=1
+        )
+        review2 = Review.objects.create(
+            song=closed_song,
+            writer=self.generate_writer('writer2s@place2.com'),
+            blurb='Not ready yet',
+            status='draft',
+            score=3,
+            sort_order=2
+        )
+        review3 = Review.objects.create(
+            song=closed_song,
+            writer=self.generate_writer('writer3s@place3.com'),
+            blurb='Contains swears',
+            status='removed',
+            score=3,
+            sort_order=3
+        )
+        resp = self.client.get(
+            reverse('publish_song', kwargs={'song_id': closed_song.id})
+        )
+
+        self.assertContains(resp, "Song has been published.")
+        fresh_song_db_lookup = Song.objects.get(id=closed_song.id)
+        self.assertEqual(fresh_song_db_lookup.status, "published")
+        reviews = [r.status for r in Review.objects.filter(song=closed_song).order_by('sort_order')]
+        self.assertEqual(reviews, ['published', 'draft', 'removed'])
+
     def assert_review_moved_to_position(self, url, expected_position):
 
         for i in range(3):
@@ -494,30 +541,3 @@ class PreviewPostTests(BlurberBaseViewTests):
         self.assertFalse(resp.context['show_admin_links'])
         self.assertNotContains(resp, "Preview")
         self.assertNotContains(resp, self.song.controversy_debug_string())
-
-
-class PublishPostTests(BlurberBaseViewTests):
-
-    @patch('blurber.views._song_html_content')
-    @patch('blurber.views._create_wp_post')
-    @patch('blurber.views._post_to_wp')
-    def test_publish_post_calls_rpc_client(self, myclient, mypost, mycontent):
-        myclient.return_value = "TESTID"
-        mycontent.return_value = Mock(content="<h1>Testing</h1>")
-
-        r = self.client.force_login(self.editor)
-        url = reverse('publish_song_to_wordpress', kwargs={'song_id': self.song.id})
-        resp = self.client.get(url)
-
-        # The mocked functions should be called correctly
-        self.assertEqual(
-            mypost.call_args, call(self.song, "&lt;h1&gt;Testing&lt;/h1&gt;")
-        )
-        self.assertEqual(
-            myclient.call_args, call(mypost.return_value)
-        )
-        # The view should give a success message
-        self.assertEqual(resp.content, b"Song posted successfully - Wordpress ID TESTID")
-        # The wordpress ID should be saved
-        updated_song = Song.objects.get(id=self.song.id)
-        self.assertEqual(updated_song.wordpress_post_id, 'TESTID')
