@@ -9,6 +9,25 @@ class HomePageTests(SongTestBase):
 
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'home_page.html')
+        self.assertQuerysetEqual(
+            resp.context['recent_songs'],
+            ['<Song: Brandy & Monica - The Boy Is Mine>']
+        )
+        self.assertEqual(resp.context['page_no'], 1)
+
+    def test_home_page_paginates(self):
+        resp = self.client.get(reverse('home_page') + '?paged=2')
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'home_page.html')
+        self.assertEqual(resp.context['page_no'], 2)
+
+    def test_home_page_ignores_invalid_pagination_param(self):
+        resp = self.client.get(reverse('home_page') + '?paged=bananas')
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'home_page.html')
+        self.assertEqual(resp.context['page_no'], 1)
 
     def test_home_page_with_post_id_param_redirects_to_single_post(self):
         resp = self.client.get(

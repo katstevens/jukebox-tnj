@@ -5,7 +5,7 @@ from blurber.models import Song
 POSTS_PER_PAGE = 5
 
 
-def home(request, page=1):
+def home(request):
     # Legacy redirect: ?p=123 goes to single_post with that ID
     if request.GET.get('p'):
         try:
@@ -13,6 +13,14 @@ def home(request, page=1):
             return redirect('single_post', song_id=song_id)
         except ValueError:
             # Ignore silently
+            pass
+
+    # Pagination
+    page = 1
+    if request.GET.get('paged'):
+        try:
+            page = int(request.GET['paged'])
+        except ValueError:
             pass
 
     # Get last X songs (X determined by setting) offset by <page>
