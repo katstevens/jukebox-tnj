@@ -50,11 +50,11 @@ class BlurberBaseViewTests(TestCase):
         w.save()
         return w
 
-    def generate_new_song(self):
+    def generate_new_song(self, status='open'):
         return Song.objects.create(
             artist='Nicki Minaj',
             title='Beez in the Trap',
-            status='open'
+            status=status
         )
 
     def assert_view_hidden_for_writer(self, url):
@@ -336,6 +336,29 @@ class ViewReviewsTest(BlurberBaseViewTests):
         self.assertEqual(resp.context['review_count'], 1)
         self.assertContains(
             resp, reverse('admin:blurber_song_change', args=[self.song.id])
+        )
+
+    def test_close_link_shown_if_song_open(self):
+        self.client.force_login(self.editor)
+        resp = self.client.get(reverse('view_reviews', kwargs={'song_id': self.song.id}))
+
+        self.assertContains(
+            resp, reverse('close_song', args=[self.song.id])
+        )
+        self.assertNotContains(
+            resp, reverse('preview_post', args=[self.song.id])
+        )
+
+    def test_preview_link_shown_if_song_already_closed(self):
+        self.client.force_login(self.editor)
+        closed_song = self.generate_new_song(status='closed')
+        resp = self.client.get(reverse('view_reviews', kwargs={'song_id': closed_song.id}))
+
+        self.assertContains(
+            resp, reverse('preview_post', args=[closed_song.id])
+        )
+        self.assertNotContains(
+            resp, reverse('close_song', args=[closed_song.id])
         )
 
     def assert_review_moved_to_position(self, url, expected_position):

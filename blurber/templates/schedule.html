@@ -59,11 +59,14 @@
 			<td class="desktop"><a href="{{ song.mp3_link }}">MP3</a></td>
 			<td class="desktop"><a href="{{ song.youtube_link }}">Video</a></td>
 			<td class="desktop">
-				{% if song in user_songs %}
-					<a href="{% url 'write_review' song.id %}">Edit blurb</a>
+				{% if song.status == 'closed' %}<em>Closed</em>
 				{% else %}
-					<a href="{% url 'write_review' song.id %}">Write blurb</a>
-				{% endif %} ({{ song.blurb_count }})
+					{% if song in user_songs %}
+						<a href="{% url 'write_review' song.id %}">Edit blurb</a>
+					{% else %}
+						<a href="{% url 'write_review' song.id %}">Write blurb</a>
+					{% endif %}
+				{% endif %}({{ song.blurb_count }})
 			</td>
 			{% if request.user.is_staff %}
 			<td class="desktop"><a href="{% url 'view_reviews' song.id %}">Review all blurbs</a></td>
@@ -72,7 +75,7 @@
 	{% endfor %}
 	</table>
 	{% if request.user.is_staff %}
-	<p><a href="{% url 'admin:blurber_song_changelist' %}">View closed/published songs in admin &raquo;</a></p>
+		<p><a href="{% url 'admin:blurber_song_changelist' %}">View published songs in admin &raquo;</a></p>
 	{% endif %}
 
 {% endblock %}

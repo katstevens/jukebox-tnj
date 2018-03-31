@@ -6,8 +6,10 @@
 {% block content %}
 	<div>
 		<br />
-		<strong>{{ song.title }} by {{ song.artist }}</strong>
+		<h3>{{ song.title }} by {{ song.artist }}</h3>
 		<p>{{ review_count }} review(s)</p>
+		<p><strong>{{ song.status|upper }}</strong>
+			{% if song.status == 'published' %}<a href="{% url 'single_post' song.id %}">View public post &raquo;</a>{% endif %}</p>
 	</div>
 	<div>
 		<table>
@@ -42,8 +44,15 @@
 		</table>
 	</div>
 	<div>
-		<p><a href="{% url 'preview_post' song.id %}">Preview this post &raquo;</a></p>
-		<p><a href="{% url 'admin:blurber_song_change' song.id %}">Edit song details (close song here) &raquo;</a></p>
+		{% if song.status == 'closed' %}
+			<p><a href="{% url 'preview_post' song.id %}">Preview (and then publish) this post &raquo;</a></p>
+		{% elif song.status == 'open' %}
+			<p><a href="{% url 'close_song' song.id %}">Close this song &raquo;</a></p>
+		{% elif song.status == 'published' %}
+			<p><a href="{% url 'admin:blurber_song_change' song.id %}">Unpublish this song in the admin &raquo;</a></p>
+		{% endif %}
+		<p><a href="{% url 'admin:blurber_song_change' song.id %}">Edit song artist/title/intro in admin &raquo;</a></p>
+
 	</div>
 	<br />
 {% endblock %}

@@ -20,7 +20,10 @@ from blurber.forms import ReviewForm, UploadSongForm
 @login_required
 def weekly_schedule(request):
 
-    all_open_songs = Song.objects.filter(status='open')
+    if request.user.is_staff:
+        all_open_songs = Song.objects.filter(status__in=['open', 'closed'])
+    else:
+        all_open_songs = Song.objects.filter(status='open')
     user_reviews = Review.objects.filter(song__in=all_open_songs, writer=request.user)
 
     try:
@@ -220,6 +223,16 @@ def _post_to_wp(post):
         password=settings.XML_RPC_PW
     )
     return client.call(post)
+
+
+@staff_member_required(login_url="login")
+def close_song(request, song_id):
+    pass
+
+
+@staff_member_required(login_url="login")
+def publish_song(request, song_id):
+    pass
 
 
 @staff_member_required(login_url="login")
