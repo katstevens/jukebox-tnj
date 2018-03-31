@@ -238,6 +238,13 @@ background-color: #fff;
     padding:1em;
     background: #ffffff;
 }
+
+.confirmation {
+    background: #ffffff;
+    margin: 1em 0 0 0;
+    padding:1em;
+}
+
 .mobile { display:none }
 
 

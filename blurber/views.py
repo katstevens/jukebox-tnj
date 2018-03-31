@@ -114,10 +114,22 @@ def upload_song(request):
 
 
 @staff_member_required(login_url="login")
-def view_reviews(request, song_id):
+def view_reviews(request, song_id, close=False, publish=False):
     # View all reviews for a song and change ordering
+    # Also acts as action confirmation page
     song = get_object_or_404(Song, id=song_id)
-    reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
+    reviews = Review.objects.filter(song_id=song_id, status__in=['saved', 'published']).order_by('sort_order')
+
+    error_message = None
+    if close and song.status == 'open':
+        song.status = 'closed'
+        song.save()
+    elif publish and song.status == 'closed':
+        reviews.update(status='published')
+        song.status = 'published'
+        song.save()
+    else:
+        error_message = "Cannot perform this action."
 
     return render(
         request,
@@ -125,7 +137,10 @@ def view_reviews(request, song_id):
         {
             'reviews': reviews,
             'song': song,
-            'review_count': reviews.count()
+            'review_count': reviews.count(),
+            'error_message': error_message,
+            'close_action': close,
+            'publish_action': publish
         }
     )
 
@@ -223,16 +238,6 @@ def _post_to_wp(post):
         password=settings.XML_RPC_PW
     )
     return client.call(post)
-
-
-@staff_member_required(login_url="login")
-def close_song(request, song_id):
-    pass
-
-
-@staff_member_required(login_url="login")
-def publish_song(request, song_id):
-    pass
 
 
 @staff_member_required(login_url="login")
