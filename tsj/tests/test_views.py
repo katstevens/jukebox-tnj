@@ -12,12 +12,21 @@ class HomePageTests(SongTestBase):
 
     def test_home_page_with_post_id_param_redirects_to_single_post(self):
         resp = self.client.get(
-            reverse('home_page') + '?s={}'.format(self.published_song.id),
+            reverse('home_page') + '?p={}'.format(self.published_song.id),
             follow=True
         )
 
         self.assertEqual(resp.status_code, 200)
         self.assertRedirects(resp, reverse('single_post', kwargs={'song_id': self.published_song.id}))
+
+    def test_home_page_ignores_non_int_post_id_param(self):
+        resp = self.client.get(
+            reverse('home_page') + '?p=bananas',
+            follow=True
+        )
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'home_page.html')
 
     def test_single_post_page_200s_for_published_songs(self):
         resp = self.client.get(reverse('single_post', kwargs={'song_id': self.published_song.id}))

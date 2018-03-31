@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from blurber.models import Song
 # Public-facing pages
 
@@ -6,7 +6,14 @@ POSTS_PER_PAGE = 5
 
 
 def home(request, page=1):
-    # TODO: if ?p=123 return single_post with that ID
+    # Legacy redirect: ?p=123 goes to single_post with that ID
+    if request.GET.get('p'):
+        try:
+            song_id = int(request.GET['p'])
+            return redirect('single_post', song_id=song_id)
+        except ValueError:
+            # Ignore silently
+            pass
 
     # Get last X songs (X determined by setting) offset by <page>
     start, end = 0, POSTS_PER_PAGE
