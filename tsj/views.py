@@ -43,8 +43,14 @@ def single_post(request, song_id):
     )
 
 
-def search_results(request):
-    return render(request, template_name="search_results.html")
+def search(request):
+    if request.method == 'GET':
+        return redirect('home_page')
+    else:
+        # TODO: search!
+        results = []
+
+    return render(request, template_name="search_results.html", context={'results': results})
 
 
 def about(request):
