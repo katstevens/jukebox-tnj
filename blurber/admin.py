@@ -55,7 +55,7 @@ class SongAdmin(admin.ModelAdmin):
             'fields': ('youtube_link', 'mp3_file', 'mp3_link','image_url', 'web_link')
         }),
         ('Publishing options', {
-            'fields': ('tagline', 'wordpress_post_id', 'display_user_ratings','publish_date'),
+            'fields': ('tagline','publish_date'),
         }),
     )
 
