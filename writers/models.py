@@ -15,6 +15,8 @@ class Writer(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=50)
 
     bio_link = models.URLField(blank=True, null=True)
+    bio_link_name = models.CharField(max_length=254, blank=True, null=True)
+    public = models.BooleanField(default=True, help_text="Tick to show bio link on We Love Us list")
 
     date_joined = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
@@ -34,6 +36,15 @@ class Writer(AbstractBaseUser, PermissionsMixin):
     def initials(self):
         return self.first_name[0] + self.last_name[0]
 
+    def bio_link_display(self):
+        # Show search results for the writer if no URL present
+        if self.bio_link:
+            return self.bio_link
+        return "?s={}+{}".format(self.first_name.lower(), self.last_name.lower())
+
+    def bio_name(self):
+        return "{}, {}.".format(self.last_name, self.first_name[0])
+
     def blurb_history(self):
         return self.review_set.all().order_by('-create_date')
 
@@ -49,3 +60,5 @@ class Writer(AbstractBaseUser, PermissionsMixin):
 
         return self.review_set.filter(status='published').order_by('-create_date')
 
+    def show_bio_link_in_blogroll(self):
+        return self.public

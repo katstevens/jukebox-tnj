@@ -56,6 +56,17 @@ class WriterTests(TestCase):
 
         self.assertEqual(self.writer.initials(), "KR")
 
+    def test_bio_link_display_defaults_to_search(self):
+        self.assertEqual(self.writer.bio_link_display(), "?s=kelly+rowland")
+
+    def test_bio_link_display_incorporats_field(self):
+        self.writer.bio_link = 'http://example.com'
+        self.writer.save()
+        self.assertEqual(self.writer.bio_link_display(), "http://example.com")
+
+    def test_bio_name(self):
+        self.assertEqual(self.writer.bio_name(), "Rowland, K.")
+
     def test_get_full_name(self):
 
         self.assertEqual(self.writer.get_full_name(), "Kelly Rowland")
