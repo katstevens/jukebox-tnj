@@ -46,12 +46,6 @@ class Song(models.Model):
     tagline = models.CharField(max_length=255, null=True, blank=True,
                                help_text="Will appear on published post.")
 
-    wordpress_post_id = models.CharField(max_length=50, null=True, blank=True,
-                                         help_text="Auto-filled on publish.")
-    display_user_ratings = models.BooleanField(default=True,
-                                               help_text="I don't know what this does"
-                                                         " but prob something to do with Wordpress")
-
     publish_date = models.DateTimeField(help_text="Schedule a publish time here (TODO)", null=True, blank=True)
     upload_date = models.DateTimeField(auto_now_add=True)
 
