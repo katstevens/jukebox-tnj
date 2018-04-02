@@ -1,8 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from blurber.models import Song
+from writers.models import Writer
 # Public-facing pages
 
 POSTS_PER_PAGE = 5
+
+
+def get_writers():
+    return Writer.objects.filter(is_active=True, public=True).order_by('last_name', 'first_name')
 
 
 def home(request):
@@ -35,7 +40,8 @@ def home(request):
         template_name="home_page.html",
         context={
             'recent_songs': recent_songs,
-            'page_no': page
+            'page_no': page,
+            'writers': get_writers()
         }
     )
 
@@ -46,7 +52,8 @@ def single_post(request, song_id):
         request,
         template_name="single_post.html",
         context={
-            'song': song
+            'song': song,
+            'writers': get_writers()
         }
     )
 
@@ -58,7 +65,14 @@ def search(request):
         # TODO: search!
         results = []
 
-    return render(request, template_name="search_results.html", context={'results': results})
+    return render(
+        request,
+        template_name="search_results.html",
+        context={
+            'results': results,
+            'writers': get_writers()
+        }
+    )
 
 
 def about(request):

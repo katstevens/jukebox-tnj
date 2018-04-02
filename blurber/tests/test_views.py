@@ -386,7 +386,7 @@ class ViewReviewsTest(BlurberBaseViewTests):
             song=closed_song,
             writer=self.generate_writer('writer2s@place2.com'),
             blurb='Not ready yet',
-            status='draft',
+            status='draft',  # should not be published
             score=3,
             sort_order=2
         )
@@ -394,7 +394,7 @@ class ViewReviewsTest(BlurberBaseViewTests):
             song=closed_song,
             writer=self.generate_writer('writer3s@place3.com'),
             blurb='Contains swears',
-            status='removed',
+            status='removed',  # should not be published
             score=3,
             sort_order=3
         )
