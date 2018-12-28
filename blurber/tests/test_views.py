@@ -1,6 +1,6 @@
 from unittest.mock import patch, call, Mock
 
-from datetime import datetime
+from datetime import datetime, timezone
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -34,7 +34,7 @@ class BlurberBaseViewTests(TestCase):
         )
 
         self.week = ScheduledWeek.objects.create(
-            week_beginning=datetime(2015,1,1),
+            week_beginning=datetime(2015,1,1, tzinfo=timezone.utc),
             week_info='Let us get this party started.'
         )
         self.week.monday.add(self.song)

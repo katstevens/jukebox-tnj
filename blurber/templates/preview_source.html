@@ -1,4 +1,4 @@
-<font size=+1>{{ song.artist }} - {{ song.title }}</font>
+<h2><a href="{% url 'single_post' song.id %}">{{ song.artist }} - {{ song.title }}</a></h2>
 <p><em>{{ song.tagline }}</em></p>
 <center>
     <img src="{{ song.image_url }}" border="2" />

@@ -12,7 +12,7 @@ def get_writers():
 
 
 def home(request):
-    # Legacy redirect: ?p=123 goes to single_post with that ID
+    # Legacy redirect: ?p=123 goes to single_post with that Song ID
     if request.GET.get('p'):
         try:
             song_id = int(request.GET['p'])
@@ -64,12 +64,13 @@ def home(request):
 
 
 def single_post(request, song_id):
-    pp = get_object_or_404(PublicPost, id=song_id, visible=True)
+    song = get_object_or_404(Song, id=song_id)
+    pp = get_object_or_404(PublicPost, song=song, visible=True)
     return render(
         request,
         template_name="single_post.html",
         context={
-            'song': pp,
+            'pp': pp,
             'writers': get_writers()
         }
     )

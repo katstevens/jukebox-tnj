@@ -132,7 +132,7 @@ def view_reviews(request, song_id, close=False, publish=False):
         pp = PublicPost.objects.create(
             song=song,
             html_content=html_data,
-            published_on=datetime.now()  # TODO: Schedule post
+            published_on=datetime.utcnow()  # TODO: Schedule post
         )
         pp.save()
     else:

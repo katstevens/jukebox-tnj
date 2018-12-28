@@ -7,6 +7,8 @@ class PublicPost(models.Model):
     A 'cached' copy of the song and its reviews that is
     visible on the public site.
     This allows quicker searching until a proper search function can be built.
+
+    IMPORTANT: Song ID refers to the Song.id, not PublicPost.id (which may change if republished)
     """
     song = models.ForeignKey(Song)
     html_content = models.TextField(help_text="Only edit this in an emergency!")

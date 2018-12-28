@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from django.test import TestCase
 
 from writers.models import Writer
@@ -46,7 +46,7 @@ class SongTestBase(TestCase):
         self.public_post = PublicPost.objects.create(
             song=self.published_song,
             html_content="Brandy & Monica - The Boy Is Mine, some more content",
-            published_on=datetime(2018, 12, 1)
+            published_on=datetime(2018, 12, 1, tzinfo=timezone.utc)
         )
 
     @staticmethod
@@ -281,7 +281,7 @@ class ScheduledWeekTests(TestCase):
 
     def test_weekdays(self):
         s = ScheduledWeek.objects.create(
-            week_beginning=datetime(2015, 1, 1),
+            week_beginning=datetime(2015, 1, 1, tzinfo=timezone.utc),
         )
         s.monday.add(self.new_song)
 

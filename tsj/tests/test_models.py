@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from django.test import TestCase
 from tsj.models import PublicPost, Song
 
@@ -14,7 +14,7 @@ class PublicPostTest(TestCase):
         pp = PublicPost.objects.create(
             html_content="<h2>Title</h2><p>Body</p>",
             song=song,
-            published_on=datetime.now()
+            published_on=datetime.utcnow()
         )
         pp.save()
 

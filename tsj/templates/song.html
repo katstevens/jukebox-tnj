@@ -1,15 +1,15 @@
 <div class="post">
-    <p>{{ song.published_on|date:"DATETIME_FORMAT" }}</p>
-    {{ song.html_content|safe }}
+    <p>{{ pp.published_on|date:"l, F jS, Y" }}</p>
+    {{ pp.html_content|safe }}
 
     {% if page_no %}
     {# Only show links for multi-post pages #}
         <p class="postmetadata">
-            <a href="{% url 'single_post' song.id %}#respond">no blergs &#187;</a>
-            {{ song.published_on|date:"DATETIME_FORMAT" }}
+            <a href="{% url 'single_post' pp.song.id %}#respond">no blergs &#187;</a>
+            {{ pp.published_on|date:"l, F jS, Y, P" }}
         </p>
     {% else %}
         {# TODO: comment form! #}
-        Comments closed.
+        <p>Comments closed.</p>
     {% endif %}
 </div>
