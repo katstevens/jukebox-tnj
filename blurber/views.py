@@ -123,6 +123,18 @@ def view_reviews(request, song_id, close=False, publish=False):
         reviews.update(status='published')
         song.status = 'published'
         song.save()
+
+        # TODO: check if a PublicPost already exists for this song, and hide previous published versions
+
+        # Copy to PublicPost
+        resp = _song_html_content(request, song_id)
+        html_data = resp.content
+        pp = PublicPost.objects.create(
+            song=song,
+            html_content=html_data,
+            published_on=datetime.now()  # TODO: Schedule post
+        )
+        pp.save()
     else:
         error_message = "Cannot perform this action."
 
@@ -185,9 +197,9 @@ def move_review(request, review_id, direction="top"):
 
 
 def _song_html_content(request, song_id, template='preview_source.html', show_admin_links=False):
-    # Churn out HTML
+    # Churn out HTML for saved/published reviews
     song = get_object_or_404(Song, id=song_id)
-    reviews = Review.objects.filter(song_id=song_id).order_by('sort_order')
+    reviews = Review.objects.filter(song_id=song_id, status__in=['saved', 'published']).order_by('sort_order')
     return render(request, template, {
         'reviews': reviews, 'song': song, 'show_admin_links': show_admin_links}
     )

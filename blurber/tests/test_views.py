@@ -7,6 +7,7 @@ from django.test import TestCase
 from writers.models import Writer
 from blurber.models import Song, Review, ScheduledWeek
 from blurber.forms import ReviewForm, UploadSongForm
+from tsj.models import PublicPost
 
 
 class BlurberBaseViewTests(TestCase):
@@ -407,6 +408,11 @@ class ViewReviewsTest(BlurberBaseViewTests):
         self.assertEqual(fresh_song_db_lookup.status, "published")
         reviews = [r.status for r in Review.objects.filter(song=closed_song).order_by('sort_order')]
         self.assertEqual(reviews, ['published', 'draft', 'removed'])
+        # PublicPost should be visible with published reviews only
+        pp = PublicPost.objects.filter(song=closed_song)
+        assert "Go go go" in pp[0].html_content
+        assert "Not ready yet" not in pp[0].html_content
+        assert "Contains swears" not in pp[0].html_content
 
     def assert_review_moved_to_position(self, url, expected_position):
 

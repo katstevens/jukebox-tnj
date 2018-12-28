@@ -15,4 +15,4 @@ class PublicPost(models.Model):
     published_on = models.DateField()
 
     def __str__(self):
-        self.song.__str__()
+        return self.song.__str__()

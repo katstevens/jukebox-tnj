@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from blurber.models import Song
 from writers.models import Writer
+from tsj.models import PublicPost
+
 from jukebox.settings import POSTS_PER_PAGE
 
 # Public-facing pages
@@ -61,8 +63,15 @@ def search(request):
     if request.method == 'GET':
         return redirect('home_page')
     else:
-        # TODO: search!
-        results = []
+        # TODO: Proper search functionality
+        if request.GET.get('q'):
+            results = PublicPost.objects.filter(
+                html_content__unaccent__icontains=request.GET['q'],
+                include_in_search_results=True,
+                visible=True
+            )
+        else:
+            results = []
 
     return render(
         request,
