@@ -135,3 +135,6 @@ STATICFILES_DIRS = [
 EMAIL_ADMINS = ['kanye@example.com']
 EMAIL_FROM_ADDRESS = "Princess Superstar <bad_babysitter@example.com>"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Public app settings
+POSTS_PER_PAGE = 5

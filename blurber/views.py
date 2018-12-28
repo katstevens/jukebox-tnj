@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from blurber.models import Song, ScheduledWeek, Review
 from blurber.forms import ReviewForm, UploadSongForm
-
+from tsj.models import PublicPost
 
 # Writer views
 

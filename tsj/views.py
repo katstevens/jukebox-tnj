@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from blurber.models import Song
 from writers.models import Writer
+from jukebox.settings import POSTS_PER_PAGE
+
 # Public-facing pages
-
-POSTS_PER_PAGE = 5
-
 
 def get_writers():
     return Writer.objects.filter(is_active=True, public=True).order_by('last_name', 'first_name')
