@@ -21,6 +21,22 @@ def home(request):
             # Ignore silently
             pass
 
+    if request.GET.get('s'):
+        results = PublicPost.objects.filter(
+            html_content__icontains=request.GET['s'],
+            include_in_search_results=True,
+            visible=True
+        )
+        return render(
+            request,
+            template_name="search_results.html",
+            context={
+                'results': results,
+                'page_no': 1,  # TODO: pagination
+                'writers': get_writers()
+            }
+        )
+
     # Pagination
     page = 1
     if request.GET.get('paged'):
@@ -34,7 +50,7 @@ def home(request):
     if page > 1:
         end = page*5
         start = end - POSTS_PER_PAGE
-    recent_songs = Song.objects.filter(status='published').order_by('-publish_date')[start:end]
+    recent_songs = PublicPost.objects.filter(visible=True).order_by('-published_on')[start:end]
 
     return render(
         request,
@@ -48,36 +64,12 @@ def home(request):
 
 
 def single_post(request, song_id):
-    song = get_object_or_404(Song, id=song_id, status='published')
+    pp = get_object_or_404(PublicPost, id=song_id, visible=True)
     return render(
         request,
         template_name="single_post.html",
         context={
-            'song': song,
-            'writers': get_writers()
-        }
-    )
-
-
-def search(request):
-    if request.method == 'GET':
-        return redirect('home_page')
-    else:
-        # TODO: Proper search functionality
-        if request.GET.get('q'):
-            results = PublicPost.objects.filter(
-                html_content__unaccent__icontains=request.GET['q'],
-                include_in_search_results=True,
-                visible=True
-            )
-        else:
-            results = []
-
-    return render(
-        request,
-        template_name="search_results.html",
-        context={
-            'results': results,
+            'song': pp,
             'writers': get_writers()
         }
     )

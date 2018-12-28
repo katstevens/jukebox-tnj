@@ -12,7 +12,7 @@ class PublicPost(models.Model):
     html_content = models.TextField(help_text="Only edit this in an emergency!")
     visible = models.BooleanField(default=True)
     include_in_search_results = models.BooleanField(default=True)
-    published_on = models.DateField()
+    published_on = models.DateTimeField()
 
     def __str__(self):
         return self.song.__str__()

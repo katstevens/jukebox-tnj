@@ -1,0 +1,13 @@
+{% extends 'public_base.html' %}
+
+{% block content %}
+    {% for pp in results %}
+        <div class="post">
+            <h2><a href="{% url 'single_post' pp.id %}">{{ pp.song.artist }} - {{ pp.song.title }}</a></h2>
+            <p>{{ pp.song.tagline }}</p>
+            <p><a href="{% url 'single_post' pp.id %}#respond">no blergs &#187;</a></p>
+        </div>
+    {% endfor %}
+
+    {# TODO: prev/next pagination here #}
+{% endblock %}

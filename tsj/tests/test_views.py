@@ -13,7 +13,7 @@ class HomePageTests(SongTestBase):
         self.assertTemplateUsed(resp, 'home_page.html')
         self.assertQuerysetEqual(
             resp.context['recent_songs'],
-            ['<Song: Brandy & Monica - The Boy Is Mine>']
+            ['<PublicPost: Brandy & Monica - The Boy Is Mine>']
         )
         self.assertEqual(resp.context['page_no'], 1)
 
@@ -33,12 +33,12 @@ class HomePageTests(SongTestBase):
 
     def test_home_page_with_post_id_param_redirects_to_single_post(self):
         resp = self.client.get(
-            reverse('home_page') + '?p={}'.format(self.published_song.id),
+            reverse('home_page') + '?p={}'.format(self.public_post.id),
             follow=True
         )
 
         self.assertEqual(resp.status_code, 200)
-        self.assertRedirects(resp, reverse('single_post', kwargs={'song_id': self.published_song.id}))
+        self.assertRedirects(resp, reverse('single_post', kwargs={'song_id': self.public_post.id}))
 
     def test_home_page_ignores_non_int_post_id_param(self):
         resp = self.client.get(
@@ -50,15 +50,10 @@ class HomePageTests(SongTestBase):
         self.assertTemplateUsed(resp, 'home_page.html')
 
     def test_single_post_page_200s_for_published_songs(self):
-        resp = self.client.get(reverse('single_post', kwargs={'song_id': self.published_song.id}))
+        resp = self.client.get(reverse('single_post', kwargs={'song_id': self.public_post.id}))
 
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'single_post.html')
-
-    def test_single_post_page_404s_for_non_published_songs(self):
-        for song in [self.song, self.new_song, self.closed_song]:
-            resp = self.client.get(reverse('single_post', kwargs={'song_id': song.id}))
-            self.assertEqual(resp.status_code, 404)
 
     def test_about_page_uses_template(self):
         resp = self.client.get(reverse('about'))
@@ -80,16 +75,8 @@ class HomePageTests(SongTestBase):
             ['<Writer: Michelle Williams>', '<Writer: Michelle G. Williams>', '<Writer: Nichelle Williams>']
         )
 
-
-class SearchTests(SongTestBase):
-    def test_search_results_get_redirects_to_home_page(self):
-        resp = self.client.get(reverse('search'), follow=True)
-
-        self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'home_page.html')
-
-    def test_search_results_post_shows_results(self):
-        resp = self.client.post(reverse('search'), {'s': 'umbrella'})
+    def test_search_results_get_with_param_shows_results(self):
+        resp = self.client.get(reverse('home_page') + '?s=boy')
 
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'search_results.html')

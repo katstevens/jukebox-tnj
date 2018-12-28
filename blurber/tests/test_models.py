@@ -2,6 +2,7 @@ from datetime import datetime
 from django.test import TestCase
 
 from writers.models import Writer
+from tsj.models import PublicPost
 from blurber.models import Song, Review, ScheduledWeek
 
 
@@ -41,6 +42,11 @@ class SongTestBase(TestCase):
             status='saved',
             score=5,
             blurb='Crowd say bo selecta'
+        )
+        self.public_post = PublicPost.objects.create(
+            song=self.published_song,
+            html_content="Brandy & Monica - The Boy Is Mine, some more content",
+            published_on=datetime(2018, 12, 1)
         )
 
     @staticmethod
