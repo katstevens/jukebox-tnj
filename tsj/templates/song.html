@@ -10,6 +10,25 @@
         </p>
     {% else %}
         {# TODO: comment form! #}
-        <p>Comments closed.</p>
+        <div class="comments-template">
+            <h3>Leave a Reply</h3>
+            <form action="{% url 'post_comment' pp.song.id %}" method="post" id="commentform">
+                {% csrf_token %}
+
+                <p>{{ form.name }} <label>Name (required)</label></p>
+                <p>{{ form.mail }} <label>Mail (will not be published) (required)</label></p>
+
+                {% if form.name.errors or form.mail.errors %}
+                    <p>Please enter your name and email.</p>
+                {% endif %}
+
+                <p>{{ form.website }} <label>Website</label></p>
+    			<p>{{ form.comment_text }}</p>
+                <input type="hidden" name="song" value="{{ pp.song.id }}">
+
+			<br />
+			<input type="submit" name="submit" value="Submit Comment" />
+            </form>
+        </div>
     {% endif %}
 </div>

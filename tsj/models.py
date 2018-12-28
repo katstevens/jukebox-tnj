@@ -21,3 +21,16 @@ class PublicPost(models.Model):
 
     def __str__(self):
         return self.song.__str__()
+
+
+class Comment(models.Model):
+    song = models.ForeignKey(Song)
+    name = models.CharField(max_length=100)
+    mail = models.CharField(max_length=100)
+    website = models.CharField(max_length=100, null=True, blank=True)
+    comment_text = models.TextField()
+    visible = models.BooleanField(default=True)
+    published_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from tsj.models import PublicPost
+from tsj.models import PublicPost, Comment
 
 
 class PublicPostAdmin(admin.ModelAdmin):
@@ -11,4 +11,11 @@ class PublicPostAdmin(admin.ModelAdmin):
     search_fields = ['song__artist', 'song__title']
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['name', 'mail', 'published_on']
+    ordering = ['-published_on']
+    readonly_fields = ['song', 'name', 'mail', 'website', 'comment_text', 'published_on']
+
+
 admin.site.register(PublicPost, PublicPostAdmin)
+admin.site.register(Comment, CommentAdmin)

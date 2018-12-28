@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from blurber.models import Song
 from writers.models import Writer
 from tsj.models import PublicPost
+from tsj.forms import CommentForm
 
 from jukebox.settings import POSTS_PER_PAGE
 
@@ -71,9 +72,19 @@ def single_post(request, song_id):
         template_name="single_post.html",
         context={
             'pp': pp,
-            'writers': get_writers()
+            'writers': get_writers(),
+            'form': CommentForm
         }
     )
+
+
+def post_comment(request, song_id):
+    if request.method == 'POST':
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            # Save the form
+            comment = form.save()
+    return redirect('single_post', song_id)
 
 
 def about(request):
