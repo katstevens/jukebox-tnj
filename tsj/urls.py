@@ -6,7 +6,7 @@ from tsj.views import (
 
 urlpatterns = [
     url(r'^$', home, name='home_page'),
-    url(r'^s/(?P<song_id>\d+)$', single_post, name='single_post'),
     url(r'^s/(?P<song_id>\d+)/comment$', post_comment, name='post_comment'),
+    url(r'^s/(?P<song_id>\d+)$', single_post, name='single_post'),
     url(r'^about$', about, name='about'),
 ]

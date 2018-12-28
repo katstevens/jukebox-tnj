@@ -9,26 +9,51 @@
             {{ pp.published_on|date:"l, F jS, Y, P" }}
         </p>
     {% else %}
-        {# TODO: comment form! #}
         <div class="comments-template">
-            <h3>Leave a Reply</h3>
-            <form action="{% url 'post_comment' pp.song.id %}" method="post" id="commentform">
-                {% csrf_token %}
+        {% if comments %}
 
-                <p>{{ form.name }} <label>Name (required)</label></p>
-                <p>{{ form.mail }} <label>Mail (will not be published) (required)</label></p>
+                <h3 id="comments">{{ comment_count }} response{{ comment_count|pluralize }} to "{{ pp.song }}"</h3>
+                <ol class="commentlist">
+                {% for comment in comments %}
+                    <li>
+                        <div class="commentmetadata">
+                            <strong>{{ comment.name }}</strong>, on {{ comment.published_on|date:"F jS, Y, P" }} said:
+                        </div>
+                        <p>{{ comment.comment_text }}</p>
+                    </li>
+                {% endfor %}
+                </ol>
+        {% endif %}
 
-                {% if form.name.errors or form.mail.errors %}
-                    <p>Please enter your name and email.</p>
-                {% endif %}
+        <h3>Leave a Reply</h3>
+        <form action="{% url 'post_comment' pp.song.id %}" method="post" id="commentform">
+            {% csrf_token %}
 
-                <p>{{ form.website }} <label>Website</label></p>
-    			<p>{{ form.comment_text }}</p>
-                <input type="hidden" name="song" value="{{ pp.song.id }}">
+            <p>{{ form.name }} <label>Name (required)</label></p>
+            <p>{{ form.mail }} <label>Mail (will not be published) (required)</label></p>
+
+            {% if form.name.errors or form.mail.errors %}
+                <p>Please enter your name and email.</p>
+            {% endif %}
+
+            <p>{{ form.website }} <label>Website</label></p>
+            <p>{{ form.comment_text }}</p>
 
 			<br />
 			<input type="submit" name="submit" value="Submit Comment" />
             </form>
+        </div>
+
+        <div class="navigation">
+            <p>
+            {% if prev_song %}
+            <l><a href="{% url 'single_post' prev_song.song.id %}">&laquo; {{ prev_song }}</a></l>
+            {% endif %}
+            <br />
+            {% if next_song %}
+            <r><a href="{% url 'single_post' next_song.song.id %}">{{ next_song }} &raquo;</a></r>
+            {% endif %}
+            </p>
         </div>
     {% endif %}
 </div>
