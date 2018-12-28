@@ -1,6 +1,7 @@
 {% extends 'public_base.html' %}
 
 {% block content %}
+    {% if results %}
     {% for pp in results %}
         <div class="post">
             <h2><a href="{% url 'single_post' pp.song.id %}">{{ pp.song.artist }} - {{ pp.song.title }}</a></h2>
@@ -8,6 +9,11 @@
             <p><a href="{% url 'single_post' pp.song.id %}#respond">no blergs &#187;</a></p>
         </div>
     {% endfor %}
+    {% else %}
+        <div class="post">
+            <h2>Not Found</h2>
+        </div>
+    {% endif %}
 
     {# TODO: prev/next pagination here #}
 {% endblock %}

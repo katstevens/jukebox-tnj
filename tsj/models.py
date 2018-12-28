@@ -8,13 +8,16 @@ class PublicPost(models.Model):
     visible on the public site.
     This allows quicker searching until a proper search function can be built.
 
+    You can reopen then republish a song and create a new PublicPost which will hide the old one, or for small
+    emergency changes you can edit the html_content directly.
+
     IMPORTANT: Song ID refers to the Song.id, not PublicPost.id (which may change if republished)
     """
     song = models.ForeignKey(Song)
     html_content = models.TextField(help_text="Only edit this in an emergency!")
     visible = models.BooleanField(default=True)
     include_in_search_results = models.BooleanField(default=True)
-    published_on = models.DateTimeField()
+    published_on = models.DateTimeField()  # Don't edit this or use for scheduling, use Song.publish_date
 
     def __str__(self):
         return self.song.__str__()

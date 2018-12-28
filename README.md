@@ -3,7 +3,7 @@ A work in progress.
 
 ## Current specs:
 - Python 3.5.1 (Python 2 might also work but not tested)
-- Django 1.9.2
+- Django 1.11.11
 
 ## To run locally:
 - Checkout the repo.
@@ -16,7 +16,7 @@ A work in progress.
     - run `./manage.py runserver` to start the server
 - Now go to http://127.0.0.1:8000/schedule, log in as the superuser and behold the wonder of Jukebox TNJ.
 
-## To run with MySQL (prod deployment(:
+## To run with MySQL (prod deployment):
 - Install `mysql-server`, `mysql-python`
 - Create database and user in MySQL
 - Change settings-prod.py DATABASE OPTIONS to point to the MySQL config file

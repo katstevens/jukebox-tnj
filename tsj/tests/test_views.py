@@ -82,3 +82,11 @@ class HomePageTests(SongTestBase):
 
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'search_results.html')
+        self.assertContains(resp, "Boy")
+
+    def test_search_results_get_with_duff_param_shows_not_found(self):
+        resp = self.client.get(reverse('home_page') + '?s=bdsfsdhjfoy')
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'search_results.html')
+        self.assertContains(resp, "Not Found")

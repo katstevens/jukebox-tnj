@@ -44,7 +44,7 @@ class Song(models.Model):
     image_url = models.URLField(null=True, blank=True,
                                 help_text="Will appear on published post.")
     tagline = models.CharField(max_length=255, null=True, blank=True,
-                               help_text="Will appear on published post.")
+                               help_text="Will appear on published post and in search results.")
 
     publish_date = models.DateTimeField(help_text="Schedule a publish time here (TODO)", null=True, blank=True)
     upload_date = models.DateTimeField(auto_now_add=True)

@@ -52,10 +52,10 @@ class SongAdmin(admin.ModelAdmin):
             'fields': ('artist', 'title', 'status', 'search_reviews_link')
         }),
         ("Media links", {
-            'fields': ('youtube_link', 'mp3_file', 'mp3_link','image_url', 'web_link')
+            'fields': ('youtube_link', 'mp3_file', 'mp3_link')
         }),
         ('Publishing options', {
-            'fields': ('tagline','publish_date'),
+            'fields': ('tagline', 'image_url',  'web_link', 'publish_date'),
         }),
     )
 
